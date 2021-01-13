@@ -1,0 +1,19 @@
+$mapDirection: ("l": "left",
+  "r": "right"
+);
+
+@for $index from 1 to 13 {
+
+  @each $key,
+  $value in $mapDirection {
+    .p#{$key}-#{$index}px {
+      padding-#{$value}: #{$index}px;
+    }
+  }
+  .px-#{$index}px {
+    padding: {
+      left: #{$index}px;
+      right: #{$index}px;
+    };
+  }
+}

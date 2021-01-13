@@ -1,0 +1,90 @@
+{
+  "vi-VN": {
+    "spacer": "{value} {key}",
+    "time": {
+      "SECONDS": "giáy",
+      "MINUTES": "phút",
+      "HOURS": "giờ",
+      "DATE": "ngày",
+      "WEEK": "tuần",
+      "MONTH": "tháng",
+      "YEAR": "năm"
+    },
+    "labels": {
+      "FILTER_QUESTIONS": "Lọc câu hỏi",
+      "MEMBER_ETHUSIASTIC": "Thành viên hăng hái",
+      "FIRST_QUESTION": "Lần đầu hỏi",
+      "LIKE": "Thích",
+      "LIKED": "Đã thích",
+      "COMMENT": "Bình luận",
+      "SHARE": "Chia sẻ",
+      "OPEN_IN": "Mở bằng",
+      "ERROR": "Lỗi",
+      "POST": "Bài viết",
+      "REQUIRED": "Bắt buộc",
+      "INVALID_EMAIL": "Email không hợp lệ",
+      "PASS_AT_LEAST_8": "Mật khẩu cần ít nhất 8 kí tự",
+      "PASS_AT_LEAST_1_UPPERCASE": "Mật khẩu cần ít nhất 1 chữ hoa",
+      "PASS_AT_LEAST_1_NUMBER": "Mật khẩu cần ít nhất 1 chữ số",
+      "EMAIL": "Email",
+      "EMAIL_HINT": "example@example.com",
+      "PASSWORD": "Mật khẩu",
+      "PASSWORD_HINT": "Jonathan2048",
+      "FORGOT_PASSWORD": "Quên mật khẩu?",
+      "LOGIN": "Đăng nhập",
+      "OR": "hoặc",
+      "NOT_ACCOUNT": "Chưa có tài khoản",
+      "EXISTS_ACCOUNT": "Đã có tài khoản",
+      "REGISTER": "Đăng ký",
+      "NAME": "Tên",
+      "NAME_HINT": "Jonathan Levi",
+      "BIRTHDAY": "Ngày sinh",
+      "BIRTHDAY_HINT": "20/10/2003",
+      "CLASS": "Lớp",
+      "CLASS_HINT": "12A9",
+      "CITY": "Thành phố",
+      "CITY_HINT": "Hà Nội",
+      "SCHOOL_NAME": "Trường học",
+      "SCHOOL_NAME_HINT": "THPT Đan Phượng",
+      "LOGIN_TEXT": "Đăng nhập",
+      "REGISTER_TEXT": "Đăng ký"
+    },
+    "errors": {
+      "YOU_NEED_LOGIN_TO_USE_FUNCTION": "Bạn cần đăng nhập để sử dụng chức năng này",
+      "YOU_DO_NOT_HAVE_ACTION": "Bạn tạm thời không thể {action} {name}"
+    },
+    "injects": {
+      "CLASSES": "Lớp {classes}",
+      "POINTS": "{points}đ",
+      "COMMENTS": "{count} bình luận"
+    },
+    "menuPoster": {
+      "SAVE_POST": {
+        "title": "Lưu bài viết",
+        "des": "Thêm vào danh sách các mục đã lưu"
+      },
+      "ADD_WRITER_TO_FIRSTVIEW": {
+        "title": "Thêm {name} vào danh sách xem trước",
+        "des": "Ưu tiên bài viết của họ trong bảng tin"
+      },
+      "HIDE_POST": {
+        "title": "Ẩn bài viết",
+        "des": "Ẩn các bài viết tương tự"
+      },
+      "HIDE_WRITER_IN_30DAYS": {
+        "title": "Tạm ẩn {admin} trong 30 ngày",
+        "des": "Tạm thời dừng xem bài viết"
+      },
+      "CANCEL_WATCH_WRITER": {
+        "title": "Bỏ theo dõi",
+        "des": "Không xem bài viết của người này nữa"
+      },
+      "REPORT_POST": {
+        "title": "Tìm hỗ trợ hoặc báo cáo bài viết",
+        "des": "Tôi lo ngại bài viết này"
+      },
+      "ENABLE_NOTIFY_POST": "Bật thông báo về bài viết này",
+      "SHARE_LINK": "Chia sẻ liên kết"
+    }
+  }
+}

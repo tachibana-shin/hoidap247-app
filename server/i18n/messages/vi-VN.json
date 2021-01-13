@@ -1,0 +1,10 @@
+{
+  "AUTH_LOGGED": "Đã đăng nhập tài khoản",
+  "LOGIN_SUCCESS": "Đăng nhập thành công",
+  "LOGIN_FAILED": "Đăng nhập thất bại",
+  "ACCOUNT_EXISTS": "Tài khoản đã tồn tại",
+  "UNKNOWN": "Không xác định",
+  "REGISTER_SUCCESS": "Đăng ký thành công",
+  "REGISTER_FAILED": "Đăng ký thất bại",
+  "LOGIN_CORRECT": "Tài khoản hoặc mật khẩu không đúng"
+}
