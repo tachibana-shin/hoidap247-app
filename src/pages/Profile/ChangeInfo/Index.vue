@@ -47,7 +47,7 @@
             <v-flex>
               <span class="font-weight-medium text-capitalize"> Thông tin cơ bản </span>
             </v-flex>
-            <span class="blue--text"> Chỉnh sửa </span>
+            <router-link to="/profile/change-info/basic" class="blue--text text-decoration-none"> Chỉnh sửa </router-link>
           </v-layout>
           <v-list>
             <v-list-item v-for="(item, index) in infoBasic" :key="index">
@@ -82,6 +82,11 @@
             icon: "mdi-email",
             name: "Email",
             value: this.$auth.user().email
+          },
+          {
+            icon: "mdi-phone-outline",
+            value: this.$auth.user().phone,
+            name: "Số điện thoại"
           },
           {
             icon: "mdi-city",

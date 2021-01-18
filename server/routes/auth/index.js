@@ -5,5 +5,6 @@ router.use("/auth", require("./register"))
 router.use("/auth", require("./fetch"))
 router.use("/auth", require("./change-info"))
 router.use("/auth", require("./get-upload"))
+router.use("/auth", require("./change-password"))
 
 module.exports = router;

@@ -1,20 +1,19 @@
 const jwt = require("./jwt")
 const mysql = require("@server/database")
-const fields = ["name", "email", "class", "schoolName", "birthday", "city", "avatar"]
+const fields = ["name", "phone", "class", "schoolName", "birthday", "city", "avatar"]
+const isEmpty = require("./isEmpty")
+const getParamsAllow = require("@helper/getParamsAllow")
 
-module.exports = async (email, uuid, args) => {
-  const argsColumns = []
-  for (const field in args) {
-    if (fields.includes(field) && !!args[field]) {
-      argsColumns.push({
-        field,
-        value: args[field]
-      })
-    }
+module.exports = async (uuid, args) => {
+  const argsColumns = getParamsAllow(args, fields)
+  
+  if (isEmpty(argsColumns)) {
+    return !!checkUser(email, uuid)
   }
   try {
-    return !!(await mysql.query(`update users set ${argsColumns.map(item => `${item.field} = ?`)} where email = ? and uuid = ?`, [...argsColumns.map(item => item.value), email, uuid]))[0]
+    return !!(await mysql.query(`update users set ${argsColumns.map(item => `${item.field} = ?`)} where uuid = ? limit 1`, [...argsColumns.map(item => item.value), uuid]))[0]
   } catch (e) {
+    console.log(e)
     return null
   }
 };

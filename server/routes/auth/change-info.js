@@ -6,6 +6,8 @@ const resizeImg = require("resize-img")
 const uuidv4 = require("uuid")
 const path = require("path")
 const getDomain = require("@helper/getDomain")
+const checkUser = require("@helper/checkUser")
+const rules = require("@helper/rules")
 
 const upload = multer({
   limits: {
@@ -43,20 +45,28 @@ router.route("/change-info").post(upload.single("avatar"), async (req, res) => {
         res.status(401).json({
           message: req.$t("AVATAR_UPLOAD_ERROR")
         })
+        return
       }
     }
-    if (await updateUser(req.user.email, req.user.uuid, req.body)) {
-      res.json({
-        message: req.$t("UPDATE_PROFILE_SUCCESS")
-      })
+    const message = rules(req, req.body)
+
+    if (message === true) {
+      if (await updateUser(req.user.uuid, req.body)) {
+        res.json({
+          message: req.$t("UPDATE_PROFILE_SUCCESS")
+        })
+      } else {
+        res.status(401).json({
+          message: req.$t("UPDATE_PROFILE_FAILED")
+        })
+      }
     } else {
       res.status(401).json({
-        message: req.$t("UPDATE_PROFILE_FAILED")
+        message
       })
     }
   } else {
     res.status(401).json({
-      error: true,
       message: req.$t("REQUIRED_LOGIN")
     })
   }

@@ -1,7 +1,7 @@
 import Vue from "vue"
 export default async (formData) => {
   await Vue.http.post("/auth/change-info", formData)
-    .then(async ({ data: { message } }) => {
+    .then(({ data: { message } }) => {
       Vue.store.commit("snackbar/setMessage", {
         color: "success",
         text: message
@@ -9,7 +9,7 @@ export default async (formData) => {
     })
     .catch(({ data: { message } }) => {
       Vue.store.commit("snackbar/setMessage", {
-        color: "danger",
+        color: "error",
         text: message
       })
     })
