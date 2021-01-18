@@ -3,10 +3,7 @@
     <v-card-title class="body-2">
       <v-layout wrap>
         <v-flex class="d-flex mb-4">
-          <v-avatar size="40px" color="deep-purple accent-4">
-            <v-img lazy-src="writer.photoURL" v-if="writer.photoURL" />
-            <span class="white--text" v-else> {{ writer.displayName.split(" ").slice(0, 2).map(item => item[0]).join("") }} </span>
-          </v-avatar>
+          <app-avatar size="40px" color="deep-purple accent-4" name="writer.displayName" :avatar="writer.photoURL" />
           <div class="ml-3">
             <h4 class="font-weight-bold"> {{ writer.displayName }} </h4>
             <small class="text--secondary">
@@ -115,11 +112,13 @@
 <script>
   import { VueLightbox } from "vue-lightbox2"
   import { VuePreviewLink } from "vue-preview-link"
+  import AppAvatar from "@/components/AppAvatar"
 
   export default {
     components: {
       VueLightbox,
-      VuePreviewLink
+      VuePreviewLink,
+      AppAvatar
     },
     props: {
       data: {
@@ -221,7 +220,7 @@
             callback()
           } else {
             this.$notify({
-              color: "danger",
+              color: "error",
               text: this.$t("errors.YOU_DO_NOT_HAVE_ACTION", {
                 action: this.$t(action),
                 name: this.$t(name)

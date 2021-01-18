@@ -77,9 +77,11 @@
       async fetchPosts({ loaded, complete }) {
         const response = await this.$http("/posts", {
           params: {
-            page: this.pagePost
+            page: this.pagePost,
+            firstPostId: this.posts[0] && this.posts[0].id
           }
         })
+        this.pagePost++
 
         this.posts.push(...response.data.posts)
         if (response.data.posts.length < 20) {

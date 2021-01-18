@@ -1,5 +1,5 @@
 const socketIo = require("socket.io")
-const checkUser = require("@helper/modules/checkUser")
+const checkUser = require("@helper/checkUser")
 module.exports = server => {
   const io = socketIo(server, {
     cors: {

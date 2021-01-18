@@ -2,7 +2,9 @@ const mysql = require("mysql").createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "hoc247"
+  database: "hoc247",
+  encoding: "utf8",
+  charset: "utf8mb4"
 })
 const connect = new Promise((resolve, reject) => {
   mysql.connect((err) => {

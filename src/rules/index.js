@@ -15,5 +15,14 @@ export default i18n => ({
       return i18n.$t("labels.PASS_AT_LEAST_1_NUMBER")
     }
     return true
+  },
+  tel(val) {
+    if ( val.length < 10 ) {
+      return i18n.$t("labels.PHONE_NUMBER_MIN_10")
+    }
+    if ( val.match(/^[0-9]+$/) ) {
+      return true
+    }
+    return i18n.$t("labels.PHONE_NUMBER_ALL_NUMBER")
   }
 });

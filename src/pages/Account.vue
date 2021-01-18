@@ -42,7 +42,7 @@
           icon: "mdi-pen",
           text: "Chỉnh sửa cá nhân",
           sub: "Chỉnh sửa thông tin cá nhân",
-          to: "/profile/contact-info"
+          to: "/profile/change-info"
         },
         {
           icon: "mdi-lock-outline",
@@ -55,7 +55,7 @@
           icon: "mdi-help-circle-outline",
           text: "Câu hỏi của tôi",
           sub: "Quản lý các câu hỏi của bạn",
-          to: "/my-question"
+          to: "/profile/questions"
         },
         {
           icon: "mdi-comment-outline",

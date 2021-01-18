@@ -1,8 +1,13 @@
 {
   "vi-VN": {
+    "short": {
+      "year": "numeric",
+       "month": "short",
+       "day": "numeric"
+    },
     "spacer": "{value} {key}",
     "time": {
-      "SECONDS": "giáy",
+      "SECONDS": "giây",
       "MINUTES": "phút",
       "HOURS": "giờ",
       "DATE": "ngày",
@@ -47,7 +52,9 @@
       "SCHOOL_NAME": "Trường học",
       "SCHOOL_NAME_HINT": "THPT Đan Phượng",
       "LOGIN_TEXT": "Đăng nhập",
-      "REGISTER_TEXT": "Đăng ký"
+      "REGISTER_TEXT": "Đăng ký",
+      "PHONE_NUMBER_MIN_10": "Số điên thoại phải có ít nhất 10 số",
+      "PHONE_NUMBER_ALL_NUM": "Số điện thoại chỉ được phép có chữ số"
     },
     "errors": {
       "YOU_NEED_LOGIN_TO_USE_FUNCTION": "Bạn cần đăng nhập để sử dụng chức năng này",

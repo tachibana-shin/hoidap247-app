@@ -1,8 +1,8 @@
 <template>
-  <v-snackbar v-model="state" :timeout="3000" :color="message.color" class="v-snack">
+  <v-snackbar v-model="state" :timeout="3000" :color="message.color" class="v-snack" app>
     {{ message.text }}
     <template v-slot:action="{ attrs }">
-      <v-btn color="blue" text v-bind="attrs" @click="message = false">
+      <v-btn color="white" text v-bind="attrs" @click="message = false">
         Close
       </v-btn>
     </template>
@@ -26,14 +26,17 @@
           return this.$store.state.snackbar.message || {}
         },
         set(val) {
-          this.$store.commit("snackbar/setMessage", null)
+          this.$store.commit("snackbar/setMessage", {
+            color: this.$store.state.snackbar.message.color,
+            text: null
+          })
         }
       }
     }
   }
 </script>
 <style lang="scss" scoped>
-  .v-snack {
+  /*.v-snack {
     &.v-snack--top {
       bottom: auto;
     }
@@ -41,5 +44,5 @@
     &.v-snack--bottom {
       top: auto;
     }
-  }
+  }*/
 </style>

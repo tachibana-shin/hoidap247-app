@@ -64,12 +64,13 @@
           })
           .then(({ data: { message } }) => {
             this.$store.commit("snackbar/setMessage", {
-              text: message
+              text: message,
+              color: "success"
             })
           })
           .catch(({ data: { message } }) => {
             this.$store.commit("snackbar/setMessage", {
-              color: "danger",
+              color: "error",
               text: message
             })
           })

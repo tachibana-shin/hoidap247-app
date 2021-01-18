@@ -6,5 +6,19 @@
   "UNKNOWN": "Không xác định",
   "REGISTER_SUCCESS": "Đăng ký thành công",
   "REGISTER_FAILED": "Đăng ký thất bại",
-  "LOGIN_CORRECT": "Tài khoản hoặc mật khẩu không đúng"
+  "LOGIN_CORRECT": "Tài khoản hoặc mật khẩu không đúng",
+  "REQUIRED_LOGIN": "Thao tác này yêu cầu bạn phải đăng nhập",
+  "AVATAR_UPLOAD_ERROR": "Ảnh đại diện tải lên bị lỗi",
+  "UPDATE_PROFILE_SUCCESS": "Cập nhật hồ sơ thành công",
+  "UPDATE_PROFILE_FAILED": "Cập nhật hồ sơ thất bại",
+  "NOT_FOUND": "Không tồn tại",
+  "REQUIRED": "Bắt buộc",
+  "INVALID_EMAIL": "Email không hợp lệ",
+  "PASS_AT_LEAST_8": "Mật khẩu phải có ít nhất 8 ký tự",
+  "PASS_AT_LEAST_1_UPPERCASE": "Mật khẩu phải có ít nhất 1 chữ hoa",
+  "PASS_AT_LEAST_1_NUMBER": "Mật khẩu phải có ít nhất 1 chữ số",
+  "PASSWORD_CORRECT": "Sai mật khẩu",
+  "CHANGE_PASSWORD_SUCCESS": "Thay đổi mật khẩu thành công",
+  "PASSWORD_USED": "Bạn không thể sử dụng mật khẩu trước đây bạn dùng",
+  "PASSWORD_NEW_DOES_NOT_EQUAL_OLD": "Mật khẩu mới không được giống mật khẩu hiện tại"
 }

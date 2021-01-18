@@ -9,4 +9,4 @@ module.exports = async token => {
   } catch (e) {
     return null
   }
-}
+};

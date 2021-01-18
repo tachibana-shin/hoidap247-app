@@ -8,7 +8,7 @@
         <span> Trang chủ </span>
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-btn to="/question">
+      <v-btn to="/questions">
         <span> Đặt câu hỏi </span>
         <v-icon>mdi-help-circle</v-icon>
       </v-btn>

@@ -6,7 +6,7 @@ const bodyParser = require("body-parser")
 alias.addAlias("@server", __dirname)
 alias.addAlias("@helper", __dirname + "/helper")
 
-const checkUser = require("@helper/modules/checkUser")
+const checkUser = require("@helper/checkUser")
 require("dotenv").config()
 
 app.use(require("cors")({
@@ -16,21 +16,22 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(async (req, res, next) => {
   const token = req.headers["authorization"]?.replace(/^Bearer /i, "")
-  
+
   if (token) {
     try {
       req.user = await checkUser(token)
+      req.token = token
     } catch (e) {
       console.log(e)
     }
   }
-  
+
   next()
 })
 require("./i18n")(app)
 
 require("./database").connect.then(async mysql => {
-    require("./routes")(app)
+    app.use("/", require("./routes"))
     require("./sockets")(app.listen(3000, (err) => {
       if (err) {
         console.log(err)

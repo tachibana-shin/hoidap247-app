@@ -47,8 +47,52 @@ export const router = Vue.router = new Router({
       }
     },
     {
-      path: "/profile/contact-info",
-      component: () => import("@/pages/Profile/ContactInfo"),
+      path: "/profile/change-info",
+      component: () => import("@/pages/Profile/ChangeInfo/Index"),
+      meta: {
+        auth: true,
+        hideBottomBar: true
+      }
+    },
+    {
+      path: "/profile/change-info/contact",
+      component: () => import("@/pages/Profile/ChangeInfo/Contact"),
+      meta: {
+        auth: true,
+        hideBottomBar: true
+      }
+    },
+    {
+      path: "/profile/change-info/basic",
+      component: () => import("@/pages/Profile/ChangeInfo/Basic"),
+      meta: {
+        auth: true,
+        hideBottomBar: true
+      }
+    },
+    {
+      path: "/profile/change-password",
+      component: () => import("@/pages/Profile/ChangePassword"),
+      meta: {
+        auth: true,
+        hideBottomBar: true
+      }
+    },
+    {
+      path: "/profile/questions",
+      component: () => import("@/pages/Profile/Questions"),
+      meta: {
+        auth: true,
+        hideBottomBar: true
+      }
+    },
+    {
+      path: "/questions",
+      component: () => import("@/pages/Questions/Index")
+    },
+    {
+      path: "/post",
+      component: () => import("@/pages/Post"),
       meta: {
         auth: true,
         hideBottomBar: true

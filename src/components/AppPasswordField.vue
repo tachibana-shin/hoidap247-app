@@ -1,10 +1,15 @@
 <template>
-  <v-text-field :label="$t('labels.PASSWORD')" required prepend-inner-icon="mdi-lock-outline" append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.password]" :type="showPassword ? 'text' : 'password'" :hint="$t('labels.PASSWORD_HINT')" @click:append="showPassword = !showPassword" v-model="valueNow" :color="color"></v-text-field>
+  <v-text-field :label="$t('labels.PASSWORD')" :required="required" :outlined="outlined" prepend-inner-icon="mdi-lock-outline" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.password]" :type="showPassword ? 'text' : 'password'" :hint="$t('labels.PASSWORD_HINT')" @click:append="showPassword = !showPassword" v-model="valueNow" :color="color"></v-text-field>
 </template>
 <script>
   import rules from "@/rules"
   export default {
-    props: ["value", "color"],
+    props: {
+      value: String,
+      color: String,
+      required: Boolean,
+      outlined: Boolean
+    },
     data: () => ({
       showPassword: false,
     }),

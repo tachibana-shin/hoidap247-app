@@ -1,0 +1,1 @@
+module.exports = () => process.env.NODE_ENV == "production" ? process.env.URL_PRODUCTION : process.env.URL_DEVELOPMENT;

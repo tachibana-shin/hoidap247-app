@@ -4,7 +4,7 @@ import { snackbar } from "./modules"
 
 Vue.use(Vuex)
 
-export const store = new Vuex.Store({
+export const store = Vue.store = new Vuex.Store({
   modules: {
     snackbar
   }

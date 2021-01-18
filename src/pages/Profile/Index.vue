@@ -1,7 +1,7 @@
 <template>
   <v-card flat color="white" min-height="100%">
     <v-app-bar fixed app color="white">
-      <v-btn icon>
+      <v-btn icon @click="$router.back()">
         <v-icon> mdi-arrow-left </v-icon>
       </v-btn>
       <v-toolbar-title>

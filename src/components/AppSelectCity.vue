@@ -1,5 +1,5 @@
 <template>
-  <v-select :items="citys" menu-props="auto" :label="$t('labels.CITY')" prepend-inner-icon="mdi-map" single-line v-model="valueNow" :rulee="rules" item-text="name" return-object :hint="$t('labels.CITY_HINT')"></v-select>
+  <v-select :items="citys" menu-props="auto" :label="$t('labels.CITY')" prepend-inner-icon="mdi-map" single-line v-model="valueNow" :rulee="rules" item-text="name" :hint="$t('labels.CITY_HINT')" :outlined="outlined"></v-select>
 </template>
 <script>
   import citys from "@/data/citys"
@@ -7,7 +7,8 @@
   export default {
     props: {
       rules: Array,
-      value: [Date, String]
+      value: [Date, String],
+      outlined: Boolean
     },
     data: () => ({
       citys: Object.values(citys)
@@ -18,7 +19,7 @@
           return this.value
         },
         set(e) {
-          this.$emit("value", e)
+          this.$emit("input", e)
         }
       }
     }
