@@ -26,9 +26,23 @@
 </template>
 <script>
   import AppSnackbar from "@/components/AppSnackbar"
+
   export default {
     components: {
       AppSnackbar
+    },
+    computed: {
+      token() {
+        return this.$auth.token()
+      }
+    },
+    watch: {
+      token: {
+        handler(newVal) {
+          this.$socket.client.emit("authorizer", newVal)
+        },
+        immediate: true
+      }
     }
   }
 </script>

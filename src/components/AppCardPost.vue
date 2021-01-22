@@ -3,11 +3,11 @@
     <v-card-title class="body-2">
       <v-layout wrap>
         <v-flex class="d-flex mb-4">
-          <app-avatar size="40px" color="deep-purple accent-4" name="writer.displayName" :avatar="writer.photoURL" />
+          <app-avatar size="40px" color="deep-purple accent-4" name="data.name" :avatar="data.avatar" />
           <div class="ml-3">
-            <h4 class="font-weight-bold"> {{ writer.displayName }} </h4>
+            <h4 class="font-weight-bold"> {{ data.name }} </h4>
             <small class="text--secondary">
-              {{ $t("spacer", timeAgo(poster.lastTimeModifier)) }} </small>
+              {{ $timeagojs(data.lastTimeModifier, $i18n.locale) }} </small>
           </div>
         </v-flex>
         <v-flex>
@@ -38,28 +38,29 @@
       <v-layout align-center justify-space-between wrap grow>
         <v-flex>
           <span>
-            {{ poster.subject }} • {{ $t("injects.CLASSES", { classes: poster.classes }) }} • {{ $t("injects.POINTS", { points: poster.point }) }}
+            {{ data.subject }} • {{ $t("injects.CLASSES", { classes: data.class }) }} • {{ $t("injects.POINTS", { points: data.point }) }}
           </span>
         </v-flex>
         <v-flex class="text-right">
-          <v-chip color="deep-purple accent-4" outlined x-small v-if="poster.firstPost"> {{ $t("labels.FIRST_QUESTION") }} </v-chip>
+          <v-chip color="deep-purple accent-4" outlined x-small v-if="data.firstPost"> {{ $t("labels.FIRST_QUESTION") }} </v-chip>
         </v-flex>
       </v-layout>
     </v-card-title>
-    <v-card-subtitle class="pt-2" v-html="poster.contents"></v-card-subtitle>
+    <v-card-subtitle class="pt-2" v-html="data.contents"></v-card-subtitle>
     <v-card-text>
-      <vue-lightbox :items="poster.images" v-if="poster.images && poster.images.length" />
-      <vue-preview-link :small="poster.linker.small" :large="poster.linker.large" :href="poster.linker.href" :image="poster.linker.image" :url-name="poster.linker.urlName" :name="poster.linker.name" v-else-if="poster" />
+      <vue-lightbox :items="data.photos.map(item => item.url)" v-if="data.photos && data.photos.length" />
+      <vue-preview-link :small="linker.small" :large="linker.large" :href="linker.href" :image="linker.image" :url-name="linker.urlName" :name="linker.name" v-else-if="linker" />
     </v-card-text>
     <v-card-actions>
       <v-layout column>
         <v-flex>
           <v-layout class="body-2 text-caption text--secondary px-2 pb-2">
             <v-flex>
-              <v-icon size="1.2em" color="pink"> mdi-heart </v-icon> {{ poster.likes }}
+              <v-icon size="1.2em" color="pink"> mdi-heart </v-icon>
+              {{ labelLikes }}
             </v-flex>
             <v-flex class="text-right">
-              {{ $t("injects.COMMENTS", { count: poster.comments }) }}
+              {{ $t("injects.COMMENTS", { count: data.comments }) }}
             </v-flex>
           </v-layout>
           <div class="pb-2">
@@ -69,9 +70,9 @@
         <v-flex>
           <v-layout align="center" class="text-center">
             <v-flex>
-              <v-btn icon :ripple="false" :color="poster.liked ? 'pink' : undefined" @click="toggleLike">
-                <v-icon size="1.3rem"> mdi-heart-outline </v-icon>
-                <span class="text-normal"> {{ $t(poster.liked ? "labels.LIKED" : "labels.LIKE") }} </span>
+              <v-btn icon :ripple="false" :color="data.liked ? 'pink' : undefined" @click="toggleLike">
+                <v-icon size="1.3rem"> {{ data.liked ? "mdi-heart" : "mdi-heart-outline" }} </v-icon>
+                <span class="text-normal"> {{ $t(data.liked ? "labels.LIKED" : "labels.LIKE") }} </span>
               </v-btn>
             </v-flex>
             <v-flex>
@@ -94,7 +95,7 @@
                     <v-list-item v-for="tile in sharedItems" :key="tile.title" @click="bottomSheetShareState = false">
                       <v-list-item-avatar>
                         <v-avatar size="32px" tile>
-                          <img :src="`https://cdn.vuetifyjs.com/images/bottom-sheets/${tile.img}`" :alt="tile.title">
+                          <img :src="`https://cdn.vuetifyjs.com/photos/bottom-sheets/${tile.img}`" :alt="tile.title">
                         </v-avatar>
                       </v-list-item-avatar>
                       <v-list-item-title>{{ tile.title }}</v-list-item-title>
@@ -136,7 +137,37 @@
         { img: 'messenger.png', title: 'Messenger' },
         { img: 'google.png', title: 'Google+' },
       ],
+      linker: null
     }),
+    watch: {
+      "data.contents": {
+        async handler() {
+          if (!this.dataChanged) {
+            this.dataChanged = true
+          }
+          const div = document.createElement("div")
+          div.innerHTML = this.content
+
+          const a = div.querySelector("a")
+          if (a) {
+            const url = a.getAttribute("href")
+            try {
+              const { data } = await this.$http.get("/utilities/og-meta", {
+                params: {
+                  url
+                }
+              })
+              this.linker = data
+            } catch (e) {
+              this.linker = null
+            }
+          } else {
+            this.linker = null
+          }
+        },
+        immediate: true
+      }
+    },
     computed: {
       menuItems() {
         return [
@@ -150,7 +181,7 @@
         },
           {
             icon: "mdi-star-outline",
-            title: this.$t("menuPoster.ADD_WRITER_TO_FIRSTVIEW.title", { name: this.writer.displayName }),
+            title: this.$t("menuPoster.ADD_WRITER_TO_FIRSTVIEW.title", { name: this.data.displayName }),
             subtitle: this.$t("menuPoster.ADD_WRITER_TO_FIRSTVIEW.des"),
             handler(item) {
 
@@ -166,7 +197,7 @@
         },
           {
             icon: "mdi-clock-outline",
-            title: this.$t("menuPoster.HIDE_WRITER_IN_30DAYS.title", { name: this.writer.displayName }),
+            title: this.$t("menuPoster.HIDE_WRITER_IN_30DAYS.title", { name: this.data.displayName }),
             subtitle: this.$t("menuPoster.HIDE_WRITER_IN_30DAYS.des"),
             handler(item) {
 
@@ -204,107 +235,43 @@
         }
       ]
       },
-      writer() {
-        return this.data.writer
+      labelLikes() {
+        if ( this.data.liked ) {
+          if ( this.data.likes - 1 > 0 ) {
+            return this.$tc("injects.LIKES", 2, { likes: this.data.likes - 1 })
+          } else {
+            return this.$tc("injects.LIKES", 0)
+          }
+        } else {
+          return this.$tc("injects.LIKES", 1, { likes: this.data.likes })
+        }
+      }
+    },
+    sockets: {
+      updateLikeAndComment({ id, likes, comments }) {
+        if (id == this.data.id) {
+          this.$emit("update", ["likes", likes])
+          this.$emit("update", ["comments", comments])
+        }
       },
-      poster() {
-        return this.data.poster
+      likeDone({ id, value }) {
+        if (this.data.id == id) {
+          this.$emit("update", ["liked", value])
+        }
       }
     },
     methods: {
-      checkPermission(permission, action, name, callback) {
-        if (this.$auth.check()) {
-          if (this.$auth.check({
-              permission
-            })) {
-            callback()
-          } else {
-            this.$notify({
-              color: "error",
-              text: this.$t("errors.YOU_DO_NOT_HAVE_ACTION", {
-                action: this.$t(action),
-                name: this.$t(name)
-              })
-            })
-          }
-        }
-        else {
-          this.$notify({
-            color: "warning",
-            text: this.$t("errors.YOU_NEED_LOGIN_TO_USE_FUNCTION")
-          })
-        }
-      },
       toggleLike() {
-        this.$socket.emit("sendProto", true)
-        return
-        this.checkPermission({
-          poster: { like: true }
-        }, "labels.LIKE", "labels.POST", async () => {
-          await this.$http("/poster", {
-            params: {
-              actions: this.poster.liked ? "UNLIKE" : "LIKE"
-            }
+        if (this.$auth.check()) {
+          this.$socket.client.emit("like", {
+            id: this.data.id,
+            value: !this.data.liked
           })
-          this.$emit("update", ["poster/liked", !this.poster.liked])
-        })
-      },
-      timeAgo(value) {
-        const tmp = new Date
-        const timeNow = new Date(tmp.getTime() + tmp.getTimezoneOffset() * 60000)
-
-        let detail = (timeNow.getTime() - value) / 1000
-
-        if (detail < 60) {
-          return {
-            value: Math.round(detail),
-            key: this.$t("time.SECONDS")
-          }
         } else {
-          detail /= 60
-          if (detail < 60) {
-            return {
-              value: ~~detail,
-              key: this.$t("time.MINUTES")
-            }
-          } else {
-            detail /= 60
-            if (detail < 24) {
-              return {
-                value: ~~detail,
-                key: this.$t("time.HOURS")
-              }
-            } else {
-              detail /= 24
-              if (detail < 30) {
-                if (detail < 7) {
-                  return {
-                    value: ~~detail,
-                    key: this.$t("time.DATE")
-                  }
-                } else {
-                  return {
-                    value: ~~(detail / 7),
-                    key: this.$t("time.WEEK")
-                  }
-                }
-              } else {
-                detail /= 30
-                if (detail < 12) {
-                  return {
-                    value: ~~detail,
-                    key: this.$t("time.MONTH")
-                  }
-                } else {
-                  detail /= 12
-                  return {
-                    value: ~~detail,
-                    key: this.$t("time.YEAR")
-                  }
-                }
-              }
-            }
-          }
+          this.$store.commit("snackbar/setMessage", {
+            color: "error",
+            text: this.$t("labels.REQUIRED_LOGIN")
+          })
         }
       }
     }

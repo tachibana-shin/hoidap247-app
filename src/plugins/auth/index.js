@@ -52,7 +52,7 @@ Vue.use(auth, {
       url: "/auth/login"
     },
     logoutData: {
-      url: "/auth/logout"
+      enabled: false
     },
     fetchData: {
       url: "/auth/fetch"

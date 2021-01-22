@@ -79,7 +79,7 @@
         email: "",
         class: "",
         schoolName: "",
-        birthday: "",
+        birthday: null,
         password: "",
         city: ""
       }

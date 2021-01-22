@@ -6,6 +6,7 @@ export default async (formData) => {
         color: "success",
         text: message
       })
+      Vue.auth.fetch()
     })
     .catch(({ data: { message } }) => {
       Vue.store.commit("snackbar/setMessage", {

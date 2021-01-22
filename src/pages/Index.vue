@@ -36,7 +36,7 @@
     <v-container>
       <v-row dense>
         <v-col cols="12" v-for="(item, index) in posts" :key="index">
-          <app-card-post :data="item" />
+          <app-card-post :data="item" @update="updateData(item, $event[0], $event[1])" />
         </v-col>
         <v-col cols="12">
           <infinite-loading @infinite="fetchPosts" />
@@ -75,7 +75,7 @@
     },
     methods: {
       async fetchPosts({ loaded, complete }) {
-        const response = await this.$http("/posts", {
+        const response = await this.$http.get("/posts/get", {
           params: {
             page: this.pagePost,
             firstPostId: this.posts[0] && this.posts[0].id
@@ -83,12 +83,20 @@
         })
         this.pagePost++
 
-        this.posts.push(...response.data.posts)
-        if (response.data.posts.length < 20) {
+        this.posts.push(...response.data)
+        if (response.data.length < 20) {
           complete()
         } else {
           loaded()
         }
+      },
+      updateData(object, path, value) {
+        path = path.split("/")
+        
+        path.slice(0, path.length - 1).forEach(item => {
+          object = object[ item ]
+        })
+        object[ path[ path.length - 1 ] ] = value
       }
     }
   }

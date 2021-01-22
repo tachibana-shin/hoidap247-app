@@ -54,7 +54,12 @@
       "LOGIN_TEXT": "Đăng nhập",
       "REGISTER_TEXT": "Đăng ký",
       "PHONE_NUMBER_MIN_10": "Số điên thoại phải có ít nhất 10 số",
-      "PHONE_NUMBER_ALL_NUM": "Số điện thoại chỉ được phép có chữ số"
+      "PHONE_NUMBER_ALL_NUM": "Số điện thoại chỉ được phép có chữ số",
+      "POSTING": "Đang đăng lên",
+      "ERRORED": "Đã xảy ra lỗi",
+      "LOGOUTED": "Đã đăng xuất",
+      "LOGOUTING": "Đang đăng xuất",
+      "REQUIRED_LOGIN": "Thao tác này yêu cầu bạn đăng nhập"
     },
     "errors": {
       "YOU_NEED_LOGIN_TO_USE_FUNCTION": "Bạn cần đăng nhập để sử dụng chức năng này",
@@ -63,7 +68,8 @@
     "injects": {
       "CLASSES": "Lớp {classes}",
       "POINTS": "{points}đ",
-      "COMMENTS": "{count} bình luận"
+      "COMMENTS": "{count} bình luận",
+      "LIKES":  "Bạn | {likes} | Bạn và {likes} người khác"
     },
     "menuPoster": {
       "SAVE_POST": {
@@ -92,6 +98,9 @@
       },
       "ENABLE_NOTIFY_POST": "Bật thông báo về bài viết này",
       "SHARE_LINK": "Chia sẻ liên kết"
+    },
+    "confirms": {
+      "LEAVE_PAGE_NOT_SAVE_DATA": "Các thay đổi chưa có thể được lưu. Bạn có muốn rời khỏi trang không?"
     }
   }
 }

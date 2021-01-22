@@ -8,12 +8,11 @@ module.exports = async (uuid, args) => {
   const argsColumns = getParamsAllow(args, fields)
   
   if (isEmpty(argsColumns)) {
-    return !!checkUser(email, uuid)
+    return !!getUser(email, uuid)
   }
   try {
     return !!(await mysql.query(`update users set ${argsColumns.map(item => `${item.field} = ?`)} where uuid = ? limit 1`, [...argsColumns.map(item => item.value), uuid]))[0]
   } catch (e) {
-    console.log(e)
     return null
   }
 };

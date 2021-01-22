@@ -6,7 +6,7 @@ const bodyParser = require("body-parser")
 alias.addAlias("@server", __dirname)
 alias.addAlias("@helper", __dirname + "/helper")
 
-const checkUser = require("@helper/checkUser")
+const getUser = require("@helper/getUser")
 require("dotenv").config()
 
 app.use(require("cors")({
@@ -19,7 +19,7 @@ app.use(async (req, res, next) => {
 
   if (token) {
     try {
-      req.user = await checkUser(token)
+      req.user = await getUser(token)
       req.token = token
     } catch (e) {
       console.log(e)

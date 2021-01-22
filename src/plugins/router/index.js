@@ -97,6 +97,22 @@ export const router = Vue.router = new Router({
         auth: true,
         hideBottomBar: true
       }
+    },
+    {
+      path: "/post/:uid",
+      component: () => import("@/pages/Post"),
+      meta: {
+        auth: true,
+        hideBottomBar: true
+      }
+    },
+    {
+      path: "/logout",
+      component: () => import("@/pages/Logout"),
+      meta: {
+        auth: true,
+        hideBottomBar: true
+      }
     }
   ]
 });
