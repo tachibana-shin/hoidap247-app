@@ -59,7 +59,9 @@
       "ERRORED": "Đã xảy ra lỗi",
       "LOGOUTED": "Đã đăng xuất",
       "LOGOUTING": "Đang đăng xuất",
-      "REQUIRED_LOGIN": "Thao tác này yêu cầu bạn đăng nhập"
+      "REQUIRED_LOGIN": "Thao tác này yêu cầu bạn đăng nhập",
+      "NEW_POSTER": "+{count} câu hỏi mới nhất",
+      "LOADING_NEW_POSTER": "Đang tải bài viết mới"
     },
     "errors": {
       "YOU_NEED_LOGIN_TO_USE_FUNCTION": "Bạn cần đăng nhập để sử dụng chức năng này",

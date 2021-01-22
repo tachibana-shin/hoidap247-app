@@ -25,12 +25,15 @@
             </div>
           </v-col>
         </v-row>
-        <!-- 
-          <div class="px-6px">
-            <v-btn color="app-green" rounded small dark>
-              +1 câu hỏi mới nhất
-            </v-btn>
-          </div> -->
+        <div class="px-6px newPost app-green white--text" v-if="newPost > 0 && pageYOffset > 35" v-ripple @click="loadNewPost">
+          <p class="mb-0" v-if="!loadingNewPost">
+            {{ $t("labels.NEW_POSTER", { count: newPost }) }}
+          </p>
+          <p class="mb-0 d-flex align-center justify-center" v-else>
+            <v-progress-circular indeterminate color="white" size="20" width="3" />
+            <span class="ml-2"> {{ $t("labels.LOADING_NEW_POSTER") }} </span>
+          </p>
+        </div>
       </template>
     </v-app-bar>
     <v-container>
@@ -48,6 +51,7 @@
 <script>
   import AppCardPost from "@/components/AppCardPost"
   import InfiniteLoading from "vue-infinite-loading"
+  let onScroll
   export default {
     components: {
       AppCardPost,
@@ -56,21 +60,14 @@
     data: () => ({
       posts: [],
       newPost: 0,
-      pagePost: 1
+      loadingNewPost: false,
+      pagePost: 1,
+
+      pageYOffset
     }),
     sockets: {
-      notifyNewPost() {
+      newPost() {
         this.newPost++
-      },
-      updatePost(newPost) {
-        const { id } = newPost
-        let postNowIndex = -1
-        this.posts.forEach((item, index) => {
-          if (item.id == id) {
-            postNowIndex = index
-          }
-        })
-        this.$set(this.posts, postNowIndex, newPost)
       }
     },
     methods: {
@@ -92,12 +89,45 @@
       },
       updateData(object, path, value) {
         path = path.split("/")
-        
+
         path.slice(0, path.length - 1).forEach(item => {
-          object = object[ item ]
+          object = object[item]
         })
-        object[ path[ path.length - 1 ] ] = value
+        object[path[path.length - 1]] = value
+      },
+      async loadNewPost() {
+        this.loadingNewPost = true
+        const { data = [] } = await this.$http.get("/posts/get", {
+          params: {
+            from: -1,
+            to: this.posts[0].id
+          }
+        })
+        
+        this.posts.unshift(...data)
+        this.newPost = 0
+        this.loadingNewPost = false
+        this.$vuetify.goTo(0)
       }
+    },
+    created() {
+      window.addEventListener("scroll", onScroll = () => this.pageYOffset = pageYOffset)
+    },
+    beforeDestroy() {
+      window.removeEventListener("scroll", onScroll)
     }
   }
 </script>
+<style lang="scss" scoped>
+  .newPost {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 100%;
+    text-align: center;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

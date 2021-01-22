@@ -1,5 +1,10 @@
-const evenStore = require("@server/eventStore")
+const eventStore = require("@server/eventStore")
 
 module.exports = (socket, io) => {
-  eventStore.on("newPost", () => socket.emit("newPost"))
+  eventStore.on("newPost", () => {
+    console.log("emit event ")
+    if (socket.id) {
+      socket.broadcast.emit("newPost")
+    }
+  })
 };

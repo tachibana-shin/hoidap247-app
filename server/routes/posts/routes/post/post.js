@@ -4,6 +4,7 @@ const path = require("path")
 const checkPost = require("@helper/checkPost")
 const addPost = require("@helper/addPost")
 const updatePost = require("@helper/updatePost")
+const eventStore = require("@server/eventStore")
 
 const upload = multer({
   limits: {
@@ -32,6 +33,7 @@ router.route("/").post(upload.array("photos[]", 10), async (req, res) => {
       }
     } else {
       if (await addPost(req.user, req.body, req.files, path.resolve(__dirname, ".."))) {
+        eventStore.emit("newPost")
         res.json({
           message: req.$t("POST_UPLOADED_SUCCESS")
         })

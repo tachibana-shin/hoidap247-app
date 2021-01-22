@@ -7,7 +7,8 @@ module.exports = server => {
   const io = socketIo(server, {
     cors: {
       origin: "*"
-    }
+    },
+    debug: "*"
   })
 
   io.on("connection", socket => {
