@@ -20,5 +20,10 @@
   "PASSWORD_CORRECT": "Sai mật khẩu",
   "CHANGE_PASSWORD_SUCCESS": "Thay đổi mật khẩu thành công",
   "PASSWORD_USED": "Bạn không thể sử dụng mật khẩu trước đây bạn dùng",
-  "PASSWORD_NEW_DOES_NOT_EQUAL_OLD": "Mật khẩu mới không được giống mật khẩu hiện tại"
+  "PASSWORD_NEW_DOES_NOT_EQUAL_OLD": "Mật khẩu mới không được giống mật khẩu hiện tại",
+  "POSTER_NOT_EXISTS": "Bài đăng không tồn tại",
+  "POST_UPLOADED_SUCCESS": "Tải lên bài viết thành công",
+  "POST_UPLOADED_FAILED": "Tải lên bài viết thất bại",
+  "POST_UPGRADE_SUCCESS": "Cập nhật bài viết thành công",
+  "POST_UPGRADE_FAILED": "Cập nhật bài viết thất bại"
 }

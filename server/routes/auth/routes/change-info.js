@@ -3,15 +3,13 @@ const multer = require("multer")
 const updateUser = require("@helper/updateUser")
 const fs = require("fs")
 const resizeImg = require("resize-img")
-const uuidv4 = require("uuid")
 const path = require("path")
 const getDomain = require("@helper/getDomain")
-const checkUser = require("@helper/checkUser")
 const rules = require("@helper/rules")
 
 const upload = multer({
   limits: {
-    fileSize: 4 * 1024 * 1024,
+    fileSize: 4 * 1024 * 1024
   }
 })
 

@@ -5,4 +5,5 @@ export { http } from "./http"
 export { i18n } from "./i18n" 
 import "./auth"
 import "./snackbar"
-import "./socket.io";
+import "./socket.io"
+import "./timeagojs";
