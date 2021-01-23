@@ -20,12 +20,11 @@ module.exports = async (user, body, photos, rootDir) => {
       update posts
       set contents = ?, 
         subject = ?,
-        point = ?,
         class = ?
       where id = ? and
         uuid = ? 
       
-    `, [body.contents, body.subject, body.point, body.class, body.uid, user.uuid]))[0]
+    `, [body.contents, body.subject, body.class, body.uid, user.uuid]))[0]
 
     if (result) {
       // remove

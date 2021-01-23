@@ -62,7 +62,7 @@
               this.input.birthday
             ] = [
               user.name || "",
-              user.birthday || ""
+              user.birthday
             ]
           }
         },

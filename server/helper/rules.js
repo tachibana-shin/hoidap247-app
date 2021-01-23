@@ -18,12 +18,38 @@ const createRules = i18n => ({
   },
   phone(val) {
     if (val.length < 10) {
-      return i18n.$t("labels.PHONE_NUMBER_MIN_10")
+      return i18n.$t("PHONE_NUMBER_MIN_10")
     }
     if (val.match(/^[0-9]+$/)) {
       return true
     }
-    return i18n.$t("labels.PHONE_NUMBER_ALL_NUMBER")
+    return i18n.$t("PHONE_NUMBER_ALL_NUMBER")
+  },
+  contents(value) {
+    if ( !!value ) {
+      return true
+    } else {
+      return i18n("CONTENTS_NOT_EMPTY")
+    }
+  },
+  class(value) {
+    value -= 0
+    if ( value > 0 && value < 13 ) {
+      return true
+    } else {
+      return i18n.$t("CLASS_MAXIMUM_IN_RANGE_1_TO_12")
+    }
+  },
+  point(value) {
+    value /= 10
+    if ( value > 0 && value < 11 && ~~value == value ) {
+      return true
+    } else {
+      return i18n.$t("POINT_INTERGER_AND_RANGE_10_TO_100")
+    }
+  },
+  subject() {
+    return true
   }
 })
 

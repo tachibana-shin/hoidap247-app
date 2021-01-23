@@ -113,6 +113,10 @@ export const router = Vue.router = new Router({
         auth: true,
         hideBottomBar: true
       }
+    },
+    {
+      path: "/watch-post/:id",
+      component: () => import("@/pages/WatchPost")
     }
   ]
 });

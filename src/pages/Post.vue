@@ -17,12 +17,10 @@
       <v-flex class="d-flex flex-wrap mb-4 header">
         <app-avatar size="45px" color="deep-purple accent-4" name="$auth.user().name" :avatar="$auth.user().avatar" />
         <div class="ml-3">
-          <h4 class="font-weight-bold"> {{ $auth.user().name }} </h4>
-          <div class="text--secondary text--caption d-flex">
-            <v-select :items="classes" menu-props="auto" placeholder="Lớp" hide-details outlined prepend-inner-icon="mdi-school" dense single-line v-model="input.class" item-text="label" />
-            <v-select :items="points" menu-props="auto" placeholder="Điểm" hide-details outlined prepend-inner-icon="mdi-point" dense single-line class="ml-2" v-model="input.point" />
-            <v-select :items="subjects" menu-props="auto" placeholder="Điểm" hide-details outlined prepend-inner-icon="mdi-point" dense single-line class="ml-2" v-model="input.subject" item-text="label" />
-          </div>
+          <h4 class="font-weight-bold text-body-1"> {{ $auth.user().name }} </h4>
+          <small class="text--secondary">
+            {{ input.subject }} • {{ input.point }}đ • Lớp {{ input.class }}
+          </small>
         </div>
       </v-flex>
       <v-flex class="textarea--inner" @click="$refs.textarea.focus()">
@@ -56,7 +54,7 @@
                   <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in photosUrlBase64" :key="item.key">
                     <div class="white" style="position: relative">
                       <v-img :src="item.url" />
-                      <v-btn icon class="close" absolute style="top: 0; right: 0" @click="photos.splice(index, 1)">
+                      <v-btn icon class="close" absolute style="top: 0; right: 0" @click="input.photos.splice(index, 1)">
                         <v-icon> mdi-close </v-icon>
                       </v-btn>
                     </div>
@@ -72,7 +70,7 @@
               </v-container>
             </v-card>
           </v-dialog>
-          <vue-preview-link :small="linker.small" :large="linker.large" :href="linker.href" :image="linker.image" :url-name="linker.urlName" :name="linker.name" v-if="linker && photos.length == 0" />
+          <vue-preview-link :small="linker.small" :large="linker.large" :href="linker.href" :image="linker.image" :url-name="linker.urlName" :name="linker.name" v-if="linker && input.photos.length == 0" />
         </div>
       </v-flex>
     </v-layout>
@@ -80,7 +78,42 @@
       <v-btn icon @click="$refs.inputFile.click()">
         <v-icon> mdi-camera </v-icon>
       </v-btn>
-      <input type="file" multiple ref="inputFile" @change="photos.push(...$event.target.files)" accept="image/*" hidden />
+      <input type="file" multiple ref="inputFile" @change="input.photos.push(...$event.target.files)" accept="image/*" hidden />
+      <v-dialog max-width="300px" v-model="stateDialogTune">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" v-on="on">
+            <v-icon> mdi-tune </v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title> Điều chỉnh </v-card-title>
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-container fluid class="px-0">
+              <v-row>
+                <v-col cols="12" sm="6" md="4">
+                  <v-select :items="classes" menu-props="auto" label="Lớp" outlined prepend-inner-icon="mdi-city" v-model="input.class" item-text="label" dense color="blue" hide-details />
+                  <small> Chọn cấp độ lớp học </small>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-select :items="points" menu-props="auto" label="Điểm" outlined prepend-inner-icon="mdi-shape-plus" dense color="blue" v-model="input.point" hide-details :disabled="editMode" />
+                  <small> Số điểm bạn đề cử cho câu hỏi này </small>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-select :items="subjects" menu-props="auto" label="Môn học" outlined prepend-inner-icon="mdi-school" dense color="blue" v-model="input.subject" item-text="label" hide-details />
+                  <small> Thể loại của câu hỏi </small>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-divider />
+          <v-card-actions class="justify-end">
+            <v-btn color="blue darken-1" text @click="stateDialogTune = false">
+              OK
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-bottom-navigation>
     <v-dialog v-model="posting" hide-overlay persistent width="300">
       <v-card color="blue" dark>
@@ -303,22 +336,23 @@
       VueLightbox
     },
     data: () => ({
-      states: [1, 2, 3],
-      content: "",
       input: {
         class: 1,
         point: 10,
-        subject: "LITERATURE"
+        subject: "LITERATURE",
+        contents: "",
+        photos: []
       },
-      photos: [],
       /* ^ data main */
       dialogEditphotos: false,
       photosUrlBase64: [],
       linker: null,
 
       dataChanged: false,
+      configTuneChanged: false,
       posting: false,
       getting: false,
+      stateDialogTune: false,
       /* ^ states */
       classes: [
         { label: "Lớp 1", value: 1 },
@@ -363,13 +397,11 @@
       ]
     }),
     watch: {
-      async photos() {
-        if (!this.dataChanged) {
-          this.dataChanged = true
-        }
-        const keyMax = Array.from(this.photos).reduce((keyMax, { key }) => keyMax > key ? keyMax : key, 0) || 0
+      async "input.photos"() {
+        this.dataChanged = true
+        const keyMax = Array.from(this.input.photos).reduce((keyMax, { key }) => keyMax > key ? keyMax : key, 0) || 0
 
-        this.photosUrlBase64 = await Promise.all(Array.from(this.photos).map((item, key) => new Promise((resolve, reject) => {
+        this.photosUrlBase64 = await Promise.all(Array.from(this.input.photos).map((item, key) => new Promise((resolve, reject) => {
           if (item instanceof File) {
             const reader = new FileReader
 
@@ -389,10 +421,8 @@
           }
         })))
       },
-      async content() {
-        if (!this.dataChanged) {
-          this.dataChanged = true
-        }
+      async "input.contents"() {
+        this.dataChanged = true
         const div = document.createElement("div")
         div.innerHTML = this.content
 
@@ -411,6 +441,20 @@
           }
         } else {
           this.linker = null
+        }
+      },
+      "input.class"() {
+        this.configTuneChanged = true
+      },
+      "input.point"() {
+        this.configTuneChanged = true
+      },
+      "input.subject"() {
+        this.configTuneChanged = true
+      },
+      stateDialogTune(value) {
+        if (value) {
+          this.configTuneChanged = true
         }
       },
       dataChanged: {
@@ -436,11 +480,12 @@
                 }
               });
 
-              [this.content, this.photos] = [data.contents, data.photos]
               this.input = {
                 class: data.class,
                 subject: data.subject,
-                point: data.point
+                point: data.point,
+                contents: data.contents,
+                photos: data.photos
               }
               this.dataChanged = false
             } catch (e) {
@@ -461,7 +506,8 @@
         this.setLink(target)
       },
       setLink(element) {
-        const urlRegex = /http(s?):\/\/((?:$|[^\s]+)\.[^\s]+)/
+        const urlRegex = /https?:\/\/(?:[\w\d-\.]+)?[\w\d-\\.]+\.{1}[\w]{1,4}(?:\/{1})?(?:[a-zA-Z0-9&-@_\+.*&#8203;~#?\/=]*)?/gi
+
 
         if (keyTimer) {
           window.clearTimeout(keyTimer)
@@ -471,7 +517,7 @@
           surroundInElement(element, urlRegex, createLink, shouldLinkifyContents)
           restoreSelection(element, savedSelection)
           keyTimer = null
-          this.content = element.innerHTML
+          this.input.contents = element.innerHTML
         }, 500)
       },
       confirmLeavePage(e) {
@@ -483,42 +529,46 @@
         }
       },
       async submitPost() {
-        this.posting = true
-        try {
-          const form = new FormData
-          form.append("contents", this.content)
-          form.append("class", this.input.class)
-          form.append("point", this.input.point)
-          form.append("subject", this.input.subject)
-          if (this.editMode) {
-            form.append("uid", this.$route.params.uid)
-          }
-          this.photos.forEach(item => {
-            if (item instanceof File) {
-              form.append("photos[]", item)
-            } else {
-              form.append("photos_not_remove[]", item.key)
+        if (this.configTuneChanged) {
+          this.posting = true
+          try {
+            const form = new FormData
+            form.append("contents", this.input.contents)
+            form.append("class", this.input.class)
+            form.append("point", this.input.point)
+            form.append("subject", this.input.subject)
+            if (this.editMode) {
+              form.append("uid", this.$route.params.uid)
             }
-          })
-          const { message } = (await this.$http.post("/posts/post", form)).data
-          this.$store.commit("snackbar/setMessage", {
-            color: "success",
-            text: message
-          })
-          this.dataChanged = false
-          this.$router.push("/")
-        } catch ({ data: { message } }) {
-          this.$store.commit("snackbar/setMessage", {
-            color: "error",
-            text: message
-          })
+            this.input.photos.forEach(item => {
+              if (item instanceof File) {
+                form.append("photos[]", item)
+              } else {
+                form.append("photos_not_remove[]", item.key)
+              }
+            })
+            const { message } = (await this.$http.post("/posts/post", form)).data
+            this.$store.commit("snackbar/setMessage", {
+              color: "success",
+              text: message
+            })
+            this.dataChanged = false
+            this.$router.push("/")
+          } catch ({ data: { message } }) {
+            this.$store.commit("snackbar/setMessage", {
+              color: "error",
+              text: message
+            })
+          }
+          this.posting = false
+        } else {
+          this.stateDialogTune = true
         }
-        this.posting = false
       }
     },
     computed: {
       ready() {
-        return !!this.content || this.photos.length > 0
+        return !!this.input.contents || this.input.photos.length > 0
       },
       editMode() {
         return "uid" in this.$route.params
@@ -535,6 +585,9 @@
       } else {
         next()
       }
+    },
+    beforeDestroy() {
+      this.dataChanged = false
     }
   }
 </script>
@@ -613,6 +666,7 @@
             top: 0;
             left: 0;
             pointer-events: none;
+            user-select: none;
             display: none;
           }
 

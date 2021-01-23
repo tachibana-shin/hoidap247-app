@@ -37,7 +37,7 @@
       </v-layout>
       <v-layout align-center justify-space-between wrap grow>
         <v-flex>
-          <span>
+          <span class="text-body-2">
             {{ data.subject }} • {{ $t("injects.CLASSES", { classes: data.class }) }} • {{ $t("injects.POINTS", { points: data.point }) }}
           </span>
         </v-flex>
@@ -46,7 +46,7 @@
         </v-flex>
       </v-layout>
     </v-card-title>
-    <v-card-subtitle class="pt-2" v-html="data.contents"></v-card-subtitle>
+    <v-card-subtitle class="pt-2 contents black--text text-body-1" v-html="data.contents" />
     <v-card-text>
       <vue-lightbox :items="data.photos.map(item => item.url)" v-if="data.photos && data.photos.length" />
       <vue-preview-link :small="linker.small" :large="linker.large" :href="linker.href" :image="linker.image" :url-name="linker.urlName" :name="linker.name" v-else-if="linker" />
@@ -141,12 +141,12 @@
     }),
     watch: {
       "data.contents": {
-        async handler() {
+        async handler(newVal) {
           if (!this.dataChanged) {
             this.dataChanged = true
           }
           const div = document.createElement("div")
-          div.innerHTML = this.content
+          div.innerHTML = newVal
 
           const a = div.querySelector("a")
           if (a) {
@@ -236,8 +236,8 @@
       ]
       },
       labelLikes() {
-        if ( this.data.liked ) {
-          if ( this.data.likes - 1 > 0 ) {
+        if (this.data.liked) {
+          if (this.data.likes - 1 > 0) {
             return this.$tc("injects.LIKES", 2, { likes: this.data.likes - 1 })
           } else {
             return this.$tc("injects.LIKES", 0)
@@ -277,3 +277,16 @@
     }
   }
 </script>
+<style lang="scss" scoped>
+  .contents {
+
+    &>>>a {
+
+      &,
+      &:active,
+      &:hover {
+        color: rgb(33, 150, 243);
+      }
+    }
+  }
+</style>
