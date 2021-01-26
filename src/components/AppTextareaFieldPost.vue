@@ -1,7 +1,7 @@
 <template>
   <div class="app-textarea-field">
     <div class="textarea">
-      
+
     </div>
     <v-bottom-navigation>
       <v-btn icon>

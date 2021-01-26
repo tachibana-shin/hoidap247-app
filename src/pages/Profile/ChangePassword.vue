@@ -31,7 +31,6 @@
 </template>
 <script>
   import AppPasswordField from "@/components/AppPasswordField"
-  import rules from "@/rules"
   export default {
     components: {
       AppPasswordField

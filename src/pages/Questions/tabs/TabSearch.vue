@@ -64,7 +64,9 @@
     watch: {
       search(newVal) {
         clearTimeout(timeoutSearch)
-        timeoutSearch = setTimeout(() => this.lazySearch = newVal, 500)
+        timeoutSearch = setTimeout(() => {
+          this.lazySearch = newVal
+        }, 500)
         this.loading = !!newVal
       },
       lazySearch(newVal) {

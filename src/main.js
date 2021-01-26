@@ -1,5 +1,4 @@
 import eruda from "eruda2"
-eruda.init()
 
 import Vue from "vue"
 import App from "./App"
@@ -7,9 +6,9 @@ import {
   router,
   store,
   vuetify,
-  http,
   i18n
 } from "./plugins"
+eruda.init()
 
 new Vue({
   el: "#app",

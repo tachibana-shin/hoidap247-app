@@ -103,7 +103,7 @@
             to: this.posts[0].id
           }
         })
-        
+
         this.posts.unshift(...data)
         this.newPost = 0
         this.loadingNewPost = false
@@ -111,7 +111,9 @@
       }
     },
     created() {
-      window.addEventListener("scroll", onScroll = () => this.pageYOffset = pageYOffset)
+      window.addEventListener("scroll", onScroll = () => {
+        this.pageYOffset = pageYOffset
+      })
     },
     beforeDestroy() {
       window.removeEventListener("scroll", onScroll)

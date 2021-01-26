@@ -4,7 +4,7 @@
       <v-layout column grow v-if="$auth.user()">
         <v-flex>
           <app-avatar size="80" :name="$auth.user().name" :avatar="$auth.user().avatar" />
-          <p class class="mb-0 mt-2 font-weight-bold"> {{ $auth.user().name }} </p>
+          <p class="mb-0 mt-2 font-weight-bold"> {{ $auth.user().name }} </p>
         </v-flex>
         <v-flex>
           <p class="text-caption"> {{ $t("labels.LOGOUTING") }} </p>

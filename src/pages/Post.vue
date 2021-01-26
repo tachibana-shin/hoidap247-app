@@ -131,7 +131,6 @@
   import { VueLightbox } from "vue-lightbox2"
 
   function createRange(node, offset, range) {
-
     if (!range) {
       range = document.createRange()
       range.selectNode(node);
@@ -149,6 +148,7 @@
         }
       } else {
         for (let lp = 0; lp < node.childNodes.length; lp++) {
+          /* eslint no-unused-vars: "off" */
           range = createRange(node.childNodes[lp], offset, range)
 
           if (offset === 0) {
@@ -160,21 +160,6 @@
 
     return range;
   }
-
-  function setCurrentCursorPosition(element, offset) {
-    if (offset >= 0) {
-      const selection = window.getSelection();
-
-      const range = createRange(element, offset);
-
-      if (range) {
-        range.collapse(false);
-        selection.removeAllRanges();
-        selection.addRange(range);
-      }
-    }
-  }
-
   function selectCurrentPosition(target, from, to) {
     const range = document.createRange()
     const sel = window.getSelection()
@@ -188,8 +173,8 @@
   }
 
   function getCaretPosition(editableDiv) {
-    let caretPos = 0,
-      sel, range;
+    let caretPos = 0;
+      let sel; let range;
     if (window.getSelection) {
       sel = window.getSelection();
       if (sel.rangeCount) {
@@ -211,7 +196,6 @@
     }
     return caretPos
   }
-
 
   function createLink(matchedTextNode) {
     var el = document.createElement("a");
@@ -244,8 +228,8 @@
       matchedTextNode = textNode.splitText(result.index);
       matchedText = result[0];
       matchLength = matchedText.length;
-      textNode = (matchedTextNode.length > matchLength) ?
-        matchedTextNode.splitText(matchLength) : null;
+      textNode = (matchedTextNode.length > matchLength)
+        ? matchedTextNode.splitText(matchLength) : null;
       surroundingNode = surrounderCreateFunc(matchedTextNode.cloneNode(true));
       parent.insertBefore(surroundingNode, matchedTextNode);
       parent.removeChild(matchedTextNode);
@@ -273,8 +257,8 @@
       range.setStart(containerEl, 0);
       range.collapse(true);
       const nodeStack = [containerEl]
-      let node, foundStart = false,
-        stop = false;
+      let node; let foundStart = false;
+        let stop = false;
 
       while (!stop && (node = nodeStack.pop())) {
         if (node.nodeType == 3) {
@@ -323,8 +307,6 @@
       textRange.select();
     };
   }
-
-
 
   document.execCommand("defaultParagraphSeparator", false, "br")
   let keyTimer = null
@@ -403,7 +385,7 @@
 
         this.photosUrlBase64 = await Promise.all(Array.from(this.input.photos).map((item, key) => new Promise((resolve, reject) => {
           if (item instanceof File) {
-            const reader = new FileReader
+            const reader = new FileReader()
 
             reader.addEventListener("load", ({ target }) => {
               resolve({
@@ -474,7 +456,7 @@
           if (this.editMode) {
             this.getting = true
             try {
-              const { data } = await this.$http.get(`/posts/post`, {
+              const { data } = await this.$http.get("/posts/post", {
                 params: {
                   id: this.$route.params.uid
                 }
@@ -506,8 +488,7 @@
         this.setLink(target)
       },
       setLink(element) {
-        const urlRegex = /https?:\/\/(?:[\w\d-\.]+)?[\w\d-\\.]+\.{1}[\w]{1,4}(?:\/{1})?(?:[a-zA-Z0-9&-@_\+.*&#8203;~#?\/=]*)?/gi
-
+        const urlRegex = /https?:\/\/(?:[\w\d-.]+)?[\w\d-\\.]+\.{1}[\w]{1,4}(?:\/{1})?(?:[a-zA-Z0-9&-@_+.*&#8203;~#?/=]*)?/gi
 
         if (keyTimer) {
           window.clearTimeout(keyTimer)
@@ -525,6 +506,8 @@
         window.removeEventListener("unload", this.confirmLeavePage)
         if (this.dataChanged) {
           e.preventDefault()
+          /* eslint no-trailing-spaces: "off" */
+          /* eslint no-return-assign: "off" */
           return e.returnValue = this.$t("confirms.LEAVE_PAGE_NOT_SAVE_DATA")
         }
       },
@@ -532,7 +515,7 @@
         if (this.configTuneChanged) {
           this.posting = true
           try {
-            const form = new FormData
+            const form = new FormData()
             form.append("contents", this.input.contents)
             form.append("class", this.input.class)
             form.append("point", this.input.point)

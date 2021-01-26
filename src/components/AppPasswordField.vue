@@ -11,7 +11,7 @@
       outlined: Boolean
     },
     data: () => ({
-      showPassword: false,
+      showPassword: false
     }),
     computed: {
       valueNow: {

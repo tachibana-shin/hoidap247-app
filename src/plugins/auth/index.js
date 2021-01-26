@@ -1,7 +1,5 @@
 import Vue from "vue"
 import auth from "@websanova/vue-auth/dist/v2/vue-auth.esm.js"
-import bearer from "@websanova/vue-auth/dist/drivers/auth/bearer.esm.js"
-import driverAuthBearer from "@websanova/vue-auth/dist/drivers/auth/bearer.esm.js"
 import driverHttpAxios from "@websanova/vue-auth/dist/drivers/http/axios.1.x.esm.js"
 import driverRouterVueRouter from "@websanova/vue-auth/dist/drivers/router/vue-router.2.x.esm.js"
 import driverOAuth2Google from "@websanova/vue-auth/dist/drivers/oauth2/google.esm.js"
@@ -33,7 +31,7 @@ Vue.use(auth, {
     router: driverRouterVueRouter,
     oauth2: {
       google: driverOAuth2Google,
-      facebook: driverOAuth2Facebook,
+      facebook: driverOAuth2Facebook
     }
   },
   options: {
@@ -62,11 +60,11 @@ Vue.use(auth, {
       enabled: false
     },
     /* @default */
-    rememberkey: 'auth_remember',
+    rememberkey: "auth_remember",
     staySignedIn: true,
     tokenDefaultKey: "token",
-    tokenImpersonateKey: 'auth_token_impersonate',
-    stores: ["storage", "cookie"],
+    tokenImpersonateKey: "auth_token_impersonate",
+    stores: ["storage", "cookie"]
     /* @/end */
   }
 });
