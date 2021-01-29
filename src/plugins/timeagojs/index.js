@@ -22,4 +22,4 @@ const localeFunc = (number, index, totalSec) => {
 
 timeagojs.register("vi-VN", localeFunc)
 
-Vue.prototype.$timeagojs = (value, locale) => timeagojs.format(value, locale);
+Vue.prototype.$timeagojs = (value, locale) => timeagojs.format(value, locale)

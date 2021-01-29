@@ -11,7 +11,7 @@ module.exports = async (...args) => {
       email: args[0],
       uuid: args[1]
     }
-    const detailUser = (await mysql.query(`select uuid, name, city, email, class, schoolName, birthday, typeLogin, avatar, lastModifier, phone from users where uuid = ? and email = ? limit 1`, [user.uuid, user.email]))[0][0]
+    const detailUser = (await mysql.query("select uuid, name, city, email, class, schoolName, birthday, typeLogin, avatar, lastModifier, phone from users where uuid = ? and email = ? limit 1", [user.uuid, user.email]))[0][0]
     if (detailUser) {
       if (detailUser.birthday) {
         const oldate = new Date(detailUser.birthday)

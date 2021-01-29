@@ -1,21 +1,10 @@
 const mysql = require("@server/database")
-const uuid = require("uuid")
-const fs = require("fs")
-const path = require("path")
-const getDomain = require("./getDomain")
+const uploader = require("./uploader")
 
-async function savePhotos(rootDir, photos) {
-  return await Promise.all(
-    photos.map(item => new Promise(async (resolve, reject) => {
-      const namePhoto = uuid.v4() + path.extname(item.originalname)
-      await fs.writeFile(path.resolve(rootDir, "upload", namePhoto), item.buffer, err => err ? reject(err) : resolve(getDomain() + `/api/posts/upload/${namePhoto}`))
-    }))
-  )
-}
-
-module.exports = async (user, body, photos, rootDir) => {
+module.exports = async (user, body, photos) => {
   try {
-    const photosUrl = await savePhotos(rootDir, photos)
+    const photosUrl = await uploader.save(photos)
+
     const result = (await mysql.query(`
       update posts
       set contents = ?, 
@@ -30,10 +19,10 @@ module.exports = async (user, body, photos, rootDir) => {
       // remove
       await mysql.query(`
         delete from photos
-        where uuidPoster = ? and
-          id not in (${body.photos_not_remove.map(() => "?").join(",")})
+        where uuidPoster = ? ${body.photos_not_remove ? `and
+          id not in (${(body.photos_not_remove || []).map(() => "?").join(",")})` : ""}
           limit 10
-      `, [body.uid, ...body.photos_not_remove])
+      `, [body.uid, ...(body.photos_not_remove || [])])
 
       if (photosUrl.length > 0) {
         return !!(await mysql.query(`
@@ -50,6 +39,7 @@ module.exports = async (user, body, photos, rootDir) => {
       return false
     }
   } catch (e) {
+    console.log(e)
     return false
   }
 };

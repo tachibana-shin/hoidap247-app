@@ -4,7 +4,7 @@ const { JSDOM } = require("jsdom")
 const NodeCache = require("node-cache")
 
 function getOgMeta(document, name) {
-  return document.querySelector(`meta[property=\"${name}\"]`) ?.getAttribute("content")
+  return document.querySelector(`meta[property="${name}"]`) ?.getAttribute("content")
 }
 async function getFavIcon(url, document) {
   const relIcon = [...document.querySelectorAll("link")].find(item => {
@@ -32,8 +32,8 @@ const cache = new NodeCache({
 router.route("/og-meta").get(async (req, res) => {
   try {
     const { url } = req.query
-    const urlName = (url.replace(/^https?:\/\//, "").match(/^([^\/]+)/) || [])[1]?.replace(/\/$/, "")
-    
+    const urlName = (url.replace(/^https?:\/\//, "").match(/^([^/]+)/) || [])[1]?.replace(/\/$/, "")
+
     if (url) {
       if (cache.has(url)) {
         res.json(cache.get(url))

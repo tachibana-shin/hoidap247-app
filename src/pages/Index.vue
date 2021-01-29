@@ -42,7 +42,9 @@
           <app-card-post :data="item" @update="updateData(item, $event[0], $event[1])" />
         </v-col>
         <v-col cols="12">
-          <infinite-loading @infinite="fetchPosts" />
+          <infinite-loading @infinite="fetchPosts">
+            <v-progress-circular indeterminate color="blue" slot="spinner" />
+          </infinite-loading>
         </v-col>
       </v-row>
     </v-container>
@@ -51,6 +53,7 @@
 <script>
   import AppCardPost from "@/components/AppCardPost"
   import InfiniteLoading from "vue-infinite-loading"
+  import { updateData } from "@/helper"
   let onScroll
   export default {
     components: {
@@ -87,14 +90,7 @@
           loaded()
         }
       },
-      updateData(object, path, value) {
-        path = path.split("/")
-
-        path.slice(0, path.length - 1).forEach(item => {
-          object = object[item]
-        })
-        object[path[path.length - 1]] = value
-      },
+      updateData,
       async loadNewPost() {
         this.loadingNewPost = true
         const { data = [] } = await this.$http.get("/posts/get", {

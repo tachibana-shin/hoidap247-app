@@ -1,5 +1,4 @@
 const router = require("express").Router()
-const path = require("path")
 const getPost = require("@helper/getPostNotInfo")
 
 router.route("/").get(async (req, res) => {
@@ -8,7 +7,7 @@ router.route("/").get(async (req, res) => {
     if (post) {
       res.json(post)
     } else {
-      res.status(401).json({
+      res.status(404).json({
         message: req.$t("POSTER_NOT_EXISTS")
       })
     }

@@ -1,59 +1,63 @@
 <template>
-  <v-card color="white" v-if="data">
+  <v-card color="white" v-if="data" :flat="flat">
     <v-card-title class="body-2">
-      <v-layout wrap>
-        <v-flex class="d-flex mb-4">
-          <app-avatar size="40px" color="deep-purple accent-4" name="data.name" :avatar="data.avatar" />
-          <div class="ml-3">
-            <h4 class="font-weight-bold"> {{ data.name }} </h4>
-            <small class="text--secondary">
-              {{ $timeagojs(data.lastTimeModifier, $i18n.locale) }} </small>
-          </div>
-        </v-flex>
+      <v-layout>
         <v-flex>
-          <div class="text-right">
-            <v-bottom-sheet inset v-model="bottomSheetMenuState">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-on="on">
-                  <v-icon> mdi-dots-horizontal </v-icon>
-                </v-btn>
-              </template>
-              <v-sheet height="300px" class="overflow-y-auto">
-                <v-list>
-                  <v-list-item v-for="(item, index) in menuItems" @click="item.handler(item); bottomSheetMenuState = false" :key="index" v-if="!item.rules || item.rules(item)">
-                    <v-list-item-avatar class="mr-1">
-                      <v-icon size="25px"> {{ item.icon }} </v-icon>
-                    </v-list-item-avatar>
-                    <v-list-item-content>
-                      <v-list-item-title> {{ item.title }} </v-list-item-title>
-                      <v-list-item-subtitle> {{ item.subtitle }} </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-sheet>
-            </v-bottom-sheet>
-          </div>
-        </v-flex>
-      </v-layout>
-      <v-layout align-center justify-space-between wrap grow>
-        <v-flex>
-          <span class="text-body-2">
-            {{ data.subject }} • {{ $t("injects.CLASSES", { classes: data.class }) }} • {{ $t("injects.POINTS", { points: data.point }) }}
-          </span>
-        </v-flex>
-        <v-flex class="text-right">
-          <v-chip color="deep-purple accent-4" outlined x-small v-if="data.firstPost"> {{ $t("labels.FIRST_QUESTION") }} </v-chip>
+          <v-layout wrap>
+            <v-flex class="d-flex mb-4">
+              <app-avatar size="40px" color="deep-purple accent-4" name="data.name" :avatar="data.avatar" />
+              <div class="ml-3">
+                <h4 class="font-weight-bold"> {{ data.name }} </h4>
+                <small class="text--secondary">
+                  {{ $timeagojs(data.lastModifier, $i18n.locale) }} </small>
+              </div>
+            </v-flex>
+            <v-flex>
+              <div class="text-right">
+                <v-bottom-sheet inset v-model="bottomSheetMenuState">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" v-on="on">
+                      <v-icon> mdi-dots-horizontal </v-icon>
+                    </v-btn>
+                  </template>
+                  <v-sheet height="300px" class="overflow-y-auto">
+                    <v-list>
+                      <v-list-item v-for="(item, index) in menuItems" @click="item.handler(item); bottomSheetMenuState = false" :key="index" v-if="!item.rules || item.rules(item)">
+                        <v-list-item-avatar class="mr-1">
+                          <v-icon size="25px"> {{ item.icon }} </v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title> {{ item.title }} </v-list-item-title>
+                          <v-list-item-subtitle> {{ item.subtitle }} </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-sheet>
+                </v-bottom-sheet>
+              </div>
+            </v-flex>
+          </v-layout>
+          <v-layout align-center justify-space-between wrap grow>
+            <v-flex>
+              <span class="text-subtitle-2">
+                {{ data.subject }} • {{ $t("injects.CLASSES", { classes: data.class }) }} • {{ $t("injects.POINTS", { points: data.point }) }}
+              </span>
+            </v-flex>
+            <v-flex class="text-right">
+              <v-chip color="deep-purple accent-4" outlined x-small v-if="data.firstPost"> {{ $t("labels.FIRST_QUESTION") }} </v-chip>
+            </v-flex>
+          </v-layout>
         </v-flex>
       </v-layout>
     </v-card-title>
-    <v-card-subtitle class="pt-2 contents black--text text-body-1" v-html="data.contents" />
+    <v-card-subtitle class="pt-2 contents black--text text-body-2" v-html="data.contents" />
     <v-card-text>
       <vue-lightbox :items="data.photos.map(item => item.url)" v-if="data.photos && data.photos.length" />
       <vue-preview-link :small="linker.small" :large="linker.large" :href="linker.href" :image="linker.image" :url-name="linker.urlName" :name="linker.name" v-else-if="linker" />
     </v-card-text>
     <v-card-actions>
       <v-layout column>
-        <v-flex>
+        <v-flex v-if="!hideStatusBar">
           <v-layout class="body-2 text-caption text--secondary px-2 pb-2">
             <v-flex>
               <v-icon size="1.2em" color="pink"> mdi-heart </v-icon>
@@ -67,6 +71,11 @@
             <v-divider />
           </div>
         </v-flex>
+        <v-flex v-else>
+          <div class="pb-2 mx-2">
+            <v-divider />
+          </div>
+        </v-flex>
         <v-flex>
           <v-layout align="center" class="text-center">
             <v-flex>
@@ -76,7 +85,7 @@
               </v-btn>
             </v-flex>
             <v-flex>
-              <v-btn icon :ripple="false">
+              <v-btn icon :ripple="false" :to="noRouterInComment ? undefined : `/view-post/${data.id}`" @click="$emit('click:comment')">
                 <v-icon size="1.3rem"> mdi-comment-outline </v-icon>
                 <span class="text-normal"> {{ $t("labels.COMMENT") }} </span>
               </v-btn>
@@ -114,6 +123,7 @@
   import { VueLightbox } from "vue-lightbox2"
   import { VuePreviewLink } from "vue-preview-link"
   import AppAvatar from "@/components/AppAvatar"
+  import { getLinkerInContents } from "@/helper"
 
   export default {
     components: {
@@ -125,7 +135,10 @@
       data: {
         type: Object,
         required: true
-      }
+      },
+      hideStatusBar: Boolean,
+      flat: Boolean,
+      noRouterInComment: Boolean
     },
     data: () => ({
       bottomSheetMenuState: false,
@@ -141,29 +154,8 @@
     }),
     watch: {
       "data.contents": {
-        async handler(newVal) {
-          if (!this.dataChanged) {
-            this.dataChanged = true
-          }
-          const div = document.createElement("div")
-          div.innerHTML = newVal
-
-          const a = div.querySelector("a")
-          if (a) {
-            const url = a.getAttribute("href")
-            try {
-              const { data } = await this.$http.get("/utilities/og-meta", {
-                params: {
-                  url
-                }
-              })
-              this.linker = data
-            } catch (e) {
-              this.linker = null
-            }
-          } else {
-            this.linker = null
-          }
+        async handler(value) {
+          this.linker = await getLinkerInContents(value)
         },
         immediate: true
       }

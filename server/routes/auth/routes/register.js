@@ -4,14 +4,13 @@ const existsEmail = require("@helper/existsEmail")
 const rules = require("@helper/rules")
 
 router.route("/register").post(async (req, res) => {
-
   if (req.user) {
     res.status(401).json({
       error: true,
       message: req.$t("AUTH_LOGGED")
     })
   } else {
-    if (await existsEmail(req.body.email, )) {
+    if (await existsEmail(req.body.email )) {
       res.status(401).json({
         error: true,
         message: req.$t("ACCOUNT_EXISTS")

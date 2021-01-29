@@ -1,21 +1,9 @@
 const mysql = require("@server/database")
-const uuid = require("uuid")
-const fs = require("fs")
-const path = require("path")
-const getDomain = require("./getDomain")
+const uploader = require("./uploader")
 
-async function savePhotos(rootDir, photos) {
-  return await Promise.all(
-    photos.map(item => new Promise(async (resolve, reject) => {
-      const namePhoto = uuid.v4() + path.extname(item.originalname)
-      await fs.writeFile(path.resolve(rootDir, "upload", namePhoto), item.buffer, err => err ? reject(err) : resolve(getDomain() + `/api/posts/upload/${namePhoto}`))
-    }))
-  )
-}
-
-module.exports = async (user, body, photos, rootDir) => {
+module.exports = async (user, body, photos) => {
   try {
-    const photosUrl = await savePhotos(rootDir, photos)
+    const photosUrl = await uploader.save(photos)
     const result = (await mysql.query(`
       insert into posts (
         contents,

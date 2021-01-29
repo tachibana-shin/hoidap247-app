@@ -2,7 +2,6 @@ const router = require("express").Router()
 const multer = require("multer")
 const updateUser = require("@helper/updateUser")
 const fs = require("fs")
-const resizeImg = require("resize-img")
 const path = require("path")
 const getDomain = require("@helper/getDomain")
 const rules = require("@helper/rules")
@@ -12,8 +11,6 @@ const upload = multer({
     fileSize: 4 * 1024 * 1024
   }
 })
-
-
 
 async function saveImage(path, buffer) {
   try {
@@ -28,7 +25,6 @@ async function saveImage(path, buffer) {
     return null
   }
 }
-
 
 router.route("/change-info").post(upload.single("avatar"), async (req, res) => {
   if (req.user) {

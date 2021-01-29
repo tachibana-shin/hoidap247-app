@@ -32,7 +32,7 @@ router.route("/").post(upload.array("photos[]", 10), async (req, res) => {
             })
           }
         } else {
-          res.status(401).json({
+          res.status(404).json({
             message: req.$t("POSTER_NOT_EXISTS")
           })
         }

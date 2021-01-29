@@ -1,7 +1,11 @@
 const router = require("express").Router()
 
-router.use("/api", require("./auth"))
-router.use("/api", require("./posts"))
-router.use("/api", require("./utilities"))
+router.use("/api", [
+  require("@helper/uploader"),
+  require("./auth"),
+  require("./posts"),
+  require("./utilities"),
+  require("./comments")
+])
 
 module.exports = router;

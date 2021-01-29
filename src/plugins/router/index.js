@@ -116,7 +116,10 @@ export const router = Vue.router = new Router({
     },
     {
       path: "/watch-post/:id",
-      component: () => import("@/pages/WatchPost")
+      component: () => import("@/pages/WatchPost"),
+      meta: {
+        hideBottomBar: true
+      }
     }
   ]
 });

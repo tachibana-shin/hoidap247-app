@@ -1,9 +1,8 @@
-const jwt = require("./jwt")
 const mysql = require("@server/database")
 const fields = ["name", "email", "class", "schoolName", "birthday", "password", "city", "typeLogin", "uuid", "avatar"]
 const sha1 = require("sha1")
 const getParamsAllow = require("@helper/getParamsAllow")
-const rules = require("./rules")
+/* eslint padded-blocks: "off"  */
 
 module.exports = async (args) => {
 

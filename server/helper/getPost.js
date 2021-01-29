@@ -2,13 +2,9 @@ const mysql = require("@server/database")
 const getPhotosOnPost = require("./getPhotosOnPost")
 const getLikerAndCommer = require("./getLikerAndCommer")
 
-module.exports = async ({
-  page = 1,
-  firstId,
-  to
-}, uuidUser) => {
+module.exports = async (uuid, uuidUser) => {
   try {
-    return await Promise.all((await mysql.query(`
+    return (await Promise.all((await mysql.query(`
         select posts.id,
           posts.lastModifier,
           posts.subject,
@@ -20,13 +16,9 @@ module.exports = async ({
           users.name,
           users.avatar
         from posts, users
-        where users.uuid = posts.uuid ${firstId == null ? "" : "and posts.id <= ?"} ${to == null ? "" : "and posts.id > ?"}
-        order by posts.lastModifier desc
-        limit 20 offset ?`, [
-          ...(firstId == null ? [] : [firstId]),
-          ...(to == null ? [] : [to]),
-          (page - 1) * 20
-        ]))[0]
+        where users.uuid = posts.uuid and
+          posts.id = ?
+        limit 1`, [uuid]))[0]
       .map(async post => {
         const [likerAndCommer, photos] = await Promise.all([
             getLikerAndCommer(post.id, uuidUser),
@@ -40,7 +32,7 @@ module.exports = async ({
           comments: likerAndCommer.comments.length,
           liked: likerAndCommer.liked
         }
-      }))
+      })))[0]
   } catch (e) {
     return null
   }

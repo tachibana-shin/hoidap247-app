@@ -26,7 +26,9 @@
         </v-list-item>
         <v-divider inset v-if="items[index + 1]" />
       </template>
-      <infinite-loading @infinite="fetchData" />
+      <infinite-loading @infinite="fetchData">
+        <v-progress-circular indeterminate color="blue" slot="spinner" />
+      </infinite-loading>
     </v-list>
   </v-card>
 </template>

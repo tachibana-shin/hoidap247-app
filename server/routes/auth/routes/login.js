@@ -17,7 +17,6 @@ router.route("/login").post(async (req, res) => {
       token,
       message: req.$t(token ? "LOGIN_SUCCESS" : "LOGIN_CORRECT")
     })
-
   }
 })
 

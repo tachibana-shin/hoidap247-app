@@ -4,7 +4,7 @@ const alias = require("module-alias")
 const bodyParser = require("body-parser")
 
 alias.addAlias("@server", __dirname)
-alias.addAlias("@helper", __dirname + "/helper")
+alias.addAlias("@helper", `${__dirname}/helper`)
 
 const getUser = require("@helper/getUser")
 require("dotenv").config()
@@ -28,7 +28,10 @@ app.use(async (req, res, next) => {
 
   next()
 })
-require("./i18n")(app)
+app.use((req, res, next) => {
+  require("./i18n").init(req, res)
+  next()
+})
 
 require("./database").connect.then(async mysql => {
     app.use("/", require("./routes"))

@@ -29,5 +29,7 @@
   "YOU_NOT_ENOUGH_POINTS": "Bạn không đủ điểm thể thực hiện thao tác này",
   "CONTENTS_NOT_EMPTY": "Nội dung không được để trống",
   "CLASS_MAXIMUM_IN_RANGE_1_TO_12": "Lớp chỉ được từ 1 đến 12",
-  "POINT_INTERGER_AND_RANGE_10_TO_100": "Điểm phải là số tròn chục từ 10 đến 100"
+  "POINT_INTERGER_AND_RANGE_10_TO_100": "Điểm phải là số tròn chục từ 10 đến 100",
+  "COMMENT_SUCCESS": "Bình luận thành công",
+  "COMMENT_FAILED": "Bình luận thất bại"
 }

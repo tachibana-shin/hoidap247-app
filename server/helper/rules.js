@@ -26,10 +26,10 @@ const createRules = i18n => ({
     return i18n.$t("PHONE_NUMBER_ALL_NUMBER")
   },
   contents(value) {
-    if ( !!value ) {
+    if ( value ) {
       return true
     } else {
-      return i18n("CONTENTS_NOT_EMPTY")
+      return i18n.$t("CONTENTS_NOT_EMPTY")
     }
   },
   class(value) {
@@ -55,7 +55,7 @@ const createRules = i18n => ({
 
 module.exports = (i18n, object) => {
   const rules = createRules(i18n)
-  
+
   for ( const key in object ) {
     if ( key in rules ) {
       const mess = rules[ key ](object[ key ])
@@ -64,6 +64,6 @@ module.exports = (i18n, object) => {
       }
     }
   }
-  
+
   return true
 };

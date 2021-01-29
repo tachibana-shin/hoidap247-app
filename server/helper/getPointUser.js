@@ -5,7 +5,6 @@ module.exports = async uuid => {
     return (await mysql.query(`
       select point from users where uuid = ? limit 1
     `, [uuid]))[0][0].point
-  return 0
   } catch (e) {
     return null
   }

@@ -1,4 +1,6 @@
+/* eslint-disable */
 import eruda from "eruda2"
+eruda.init()
 
 import Vue from "vue"
 import App from "./App"
@@ -8,7 +10,6 @@ import {
   vuetify,
   i18n
 } from "./plugins"
-eruda.init()
 
 new Vue({
   el: "#app",
@@ -19,3 +20,4 @@ new Vue({
   components: { App },
   template: "<App/>"
 });
+ 

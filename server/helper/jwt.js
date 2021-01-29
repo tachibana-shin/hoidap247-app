@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken")
-const privateKey = require("fs").readFileSync(__dirname + "/authorized_keys", "utf-8")
+const privateKey = require("fs").readFileSync(`${__dirname}/authorized_keys`, "utf-8")
 const mysql = require("@server/database")
 
-
 async function verify(token) {
-  if ((await mysql.query(`select id from jwt_evict where token = ? limit 1`, [token]))[0].length) {
+  if ((await mysql.query("select id from jwt_evict where token = ? limit 1", [token]))[0].length) {
     console.warn(`"${token} evicted!`)
     return null
   } else {
@@ -27,7 +26,7 @@ module.exports = {
   async evict(token) {
     try {
       if (await verify(token) !== null) {
-        return (await mysql.query(`insert into jwt_evict (token) values ( ? )`, [token]))[0].length > 0
+        return (await mysql.query("insert into jwt_evict (token) values ( ? )", [token]))[0].length > 0
       } else {
         return false
       }
