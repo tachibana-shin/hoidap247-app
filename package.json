@@ -36,7 +36,7 @@
     "vue-infinite-loading": "^2.4.5",
     "vue-lightbox2": "^0.0.2-b1",
     "vue-preview-link": "^0.0.1-b3",
-    "vue-router": "^3.0.1",
+    "vue-router": "3.5.1",
     "vue-socket.io-extended": "^4.0.6",
     "vuetify": "^2.4.3",
     "vuex": "^3.6.0"
