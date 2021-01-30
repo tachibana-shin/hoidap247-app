@@ -1,9 +1,9 @@
 const mysql = require("@server/database")
 const uploader = require("./uploader")
 
-module.exports = async (user, body, photos) => {
+module.exports = async (user, body, photo) => {
   try {
-    const photosUrl = await uploader.save(photos.slice(0, 1))
+    const photosUrl = await uploader.save(photo ? [photo] : [])
     const { insertId } = (await mysql.query(`
       insert into comments (
         uuidPoster,

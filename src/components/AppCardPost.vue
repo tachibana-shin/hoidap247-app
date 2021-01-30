@@ -227,28 +227,35 @@
         }
       ]
       },
+      likes() {
+        return this.data.likes + (this.data.liked ? 1 : 0)
+      },
       labelLikes() {
         if (this.data.liked) {
-          if (this.data.likes - 1 > 0) {
-            return this.$tc("injects.LIKES", 2, { likes: this.data.likes - 1 })
+          if (this.likes - 1 > 0) {
+            return this.$tc("injects.LIKES", 2, { likes: this.likes - 1 })
           } else {
             return this.$tc("injects.LIKES", 0)
           }
         } else {
-          return this.$tc("injects.LIKES", 1, { likes: this.data.likes })
+          return this.$tc("injects.LIKES", 1, { likes: this.likes })
         }
       }
     },
     sockets: {
-      updateLikeAndComment({ id, likes, comments }) {
+      SERVER__updateLikes({ id, value }) {
         if (id == this.data.id) {
-          this.$emit("update", ["likes", likes])
-          this.$emit("update", ["comments", comments])
+          this.$emit("update", ["likes", value])
         }
       },
-      likeDone({ id, value }) {
-        if (this.data.id == id) {
-          this.$emit("update", ["liked", value])
+      SERVER__updateComments({ id, value }) {
+        if (id == this.data.id) {
+          this.$emit("update", ["comments", value])
+        }
+      },
+      like__DONE({ isError, value, id }) {
+        if (isError && id == this.data.id) {
+          this.$emit("update", ["liked", !value])
         }
       }
     },
@@ -259,6 +266,7 @@
             id: this.data.id,
             value: !this.data.liked
           })
+          this.$emit("update", ["liked", !this.data.liked])
         } else {
           this.$store.commit("snackbar/setMessage", {
             color: "error",

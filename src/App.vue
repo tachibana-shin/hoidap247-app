@@ -27,21 +27,39 @@
 <script>
   import AppSnackbar from "@/components/AppSnackbar"
 
+  let timeout = null
   export default {
     components: {
       AppSnackbar
     },
     computed: {
-      token() {
-        return this.$auth.token()
+      user() {
+        return this.$auth.user()
+      }
+    },
+    sockets: {
+      authorized() {
+        clearTimeout(timeout)
       }
     },
     watch: {
-      token: {
-        handler(newVal) {
-          this.$socket.client.emit("authorizer", newVal)
+      user: {
+        handler() {
+          clearTimeout(timeout)
+          if (!timeout) {
+            this.sendToken()
+          }
+          timeout = setTimeout(() => {
+            this.sendToken()
+          }, 1000)
         },
         immediate: true
+      }
+    },
+    methods: {
+      sendToken() {
+        console.log("%c <socket.io>: sended token.", "color: blue")
+        this.$socket.client.emit("authorizer", this.$auth.token())
       }
     }
   }

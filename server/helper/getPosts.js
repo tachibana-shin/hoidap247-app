@@ -42,6 +42,7 @@ module.exports = async ({
         }
       }))
   } catch (e) {
+    console.log( e )
     return null
   }
 };

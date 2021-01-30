@@ -2,7 +2,7 @@
   <div class="pa-3">
     <v-layout>
       <app-avatar :name="$auth.user().name" :avatar="$auth.user().avatar" :size="small ? '30px' : '40px'" class="mr-2" />
-      <app-editable class="mr-2 textarea" :value="contents" @input="$emit('update:contents', $event)" :photos="photos" placeholder="Viết bình luận" @click:add-photos="$refs.inputFile.click()" @click:remove-photos="$emit('update:photos', [])" width-lightbox="100px" height-lightbox="152.43902px" small />
+      <app-editable class="mr-2 textarea" :contents="contents" @input="$emit('update:contents', $event)" :photos="photos" placeholder="Viết bình luận" @click:add-photos="$refs.inputFile.click()" @click:remove-photos="$emit('update:photos', [])" width-lightbox="100px" height-lightbox="152.43902px" small />
       <!-- @s1guza -->
       <v-btn color="blue" :dark="validate" shaped :disabled="!validate" @click="$emit('click:submit')"> Đăng </v-btn>
     </v-layout>

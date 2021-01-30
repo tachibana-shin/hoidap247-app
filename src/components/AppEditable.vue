@@ -287,11 +287,16 @@
         immediate: true
       },
       "contents": {
-        async handler(newVal) {
+        async handler(newVal = "") {
           this.linker = await getLinkerInContents(newVal)
-        }
-      },
-      immediate: true
+          if (this.$refs.textarea) {
+            if (newVal != this.$refs.textarea.innerHTML) {
+              this.$refs.textarea.innerHTML = newVal
+            }
+          }
+        },
+        immediate: true
+      }
     },
     methods: {
       handlerInput({ target }) {
@@ -348,6 +353,7 @@
       width: 100%;
       min-height: 1.5em;
       position: relative;
+
       &.textarea--small {
         font-size: (14rem / 16);
         min-height: (14rem / 16 + 14 / 16 / 5 * 2);

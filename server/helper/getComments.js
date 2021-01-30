@@ -7,7 +7,8 @@ async function getBaseUser(uuid) {
 
 module.exports = async ({
   page = 1,
-  id
+  id,
+  lastCommentId
 }, uuid) => {
   try {
     return await Promise.all((await mysql.query(`
@@ -22,20 +23,22 @@ module.exports = async ({
           users.name,
           users.avatar
         from comments, users
-        where users.uuid = comments.uuid
+        where users.uuid = comments.uuid  ${lastCommentId ? `and comments.id < ?` : ""}
         order by comments.lastModifier desc
-        limit 20 offset ?`, [(page - 1) * 20]))[0]
+        ${lastCommentId ? "" : "limit 20 offset ?"}`, [
+          lastCommentId || (page - 1) * 20
+        ]))[0]
       .map(async post => {
         const likeAndComment = await getLikerAndCommerInComment(post.id, uuid)
 
         return {
           ...post,
-          answer: {
-            name: (await getBaseUser(post.uuid))?.name,
+          answer: likeAndComment.length ? {
+            name: (await getBaseUser(likeAndComment[0]))?.name,
             count: likeAndComment.comments.length
-          },
+          } : null,
           likes: likeAndComment.likes.length,
-          liked: likeAndComment.liked 
+          liked: likeAndComment.liked
         }
       }))
   } catch (e) {

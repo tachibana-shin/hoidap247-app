@@ -27,7 +27,12 @@
       <v-divider />
       <div class="pa-3">
         <!-- /comment -->
-        <app-comment v-for="(item, index) in comments" :key="index" :data="item" @update="updateData(item, $event[0], $event[1])" />
+        <div class="text-center" v-show="sendingComment">
+          <v-progress-circular indeterminate color="blue" slot="spinner" />
+        </div>
+        <transition-group name="comment-showing" tag="div">
+          <app-comment v-for="item in comments" :key="item.id" :data="item" @update="updateData(item, $event[0], $event[1])" />
+        </transition-group>
         <infinite-loading @infinite="fetchComment">
           <v-progress-circular indeterminate color="blue" slot="spinner" />
         </infinite-loading>
@@ -62,31 +67,22 @@
         photos: []
       },
 
-      pageComments: 1,
       comments: [],
-      comment: {
-        photos: [],
-        name: "Nguyễn Thành",
-        contents: "Xin chào thế giới!",
-        answer: {
-          name: "Nguyễn Thành",
-          count: 5
-        },
-        lastModifier: new Date("01/01/2021"),
-        likes: 100,
-        liked: true
-      }
+      sendingComment: false
     }),
     computed: {
+      likes() {
+        return this.data.likes + (this.data.liked ? 1 : 0)
+      },
       labelLikes() {
         if (this.data.liked) {
-          if (this.data.likes - 1 > 0) {
-            return this.$tc("injects.LIKES", 2, { likes: this.data.likes - 1 })
+          if (this.likes - 1 > 0) {
+            return this.$tc("injects.LIKES", 2, { likes: this.likes - 1 })
           } else {
             return this.$tc("injects.LIKES", 0)
           }
         } else {
-          return this.$tc("injects.LIKES", 1, { likes: this.data.likes })
+          return this.$tc("injects.LIKES", 1, { likes: this.likes })
         }
       }
     },
@@ -114,10 +110,16 @@
       }
     },
     sockets: {
-      sendCommentDone({ id, message, isError }) {
+      SERVER__newComment(comment) {
+        if (!this.comments.find(item => item.id == comment.id)) {
+          this.comments.unshift(comment)
+        }
+        this.sendingComment = false
+      },
+      comment__DONE({ id, message, isError }) {
         if (isError) {
           this.$store.commit("snackbar/setMessage", {
-            color: "danger",
+            color: "error",
             text: message
           })
         } else {
@@ -125,34 +127,73 @@
             color: "success",
             text: message
           })
-          this.input.contents = ""
-          this.input.photos = []
+          this.resetCommentBox()
         }
       }
     },
     methods: {
       updateData,
+      fileToBuffer(file) {
+        return {
+          originalname: file.name,
+          buffer: file
+        }
+      },
       async sendComment() {
-        this.$socket.client.emit("sendComment", {
-          ...this.input,
+        this.sendingComment = true
+        this.$socket.client.emit("comment", {
+          contents: this.input.contents,
+          photo: this.input.photos[0] && this.fileToBuffer(this.input.photos[0]),
           uuidPoster: this.data.id
         })
       },
       async fetchComment({ loaded, complete }) {
-        const { data } = await this.$http("/api/comments/get", {
+        const lastCommentId = this.comments[this.comments.length - 1]
+        const { data } = await this.$http("/comments/get", {
           params: {
             id: this.data.id,
-            page: this.pageComments
+            lastCommentId: lastCommentId && lastCommentId.id
           }
         })
-        this.pageComments++
         this.comments.push(...data)
         if (data.length < 20) {
           complete()
         } else {
           loaded()
         }
+      },
+      resetCommentBox() {
+        this.input.contents = ""
+        this.input.photos = []
       }
     }
   }
 </script>
+<style lang="scss">
+  .comment-showing {
+    &-move {
+      transition: transform .3s ease;
+    }
+
+    &-enter-active {
+      animation: slideYFadeIn .3s ease;
+    }
+
+    &-leave-active {
+      animation: slideYFadeIn .3s ease reverse;
+      position: absolute;
+    }
+
+    @keyframes slideYFadeIn {
+      from {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  }
+</style>
