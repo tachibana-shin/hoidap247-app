@@ -1,9 +1,6 @@
 const mysql = require("@server/database")
 const getLikerAndCommerInComment = require("./getLikerAndCommerInComment")
-
-async function getBaseUser(uuid) {
-  return (await mysql.query(`select name from users where uuid = ? limit 1`, [uuid]))[0][0]
-}
+const getBaseUser = require("./getBaseUser")
 
 module.exports = async (idComment, uuid) => {
   try {
@@ -31,11 +28,11 @@ module.exports = async (idComment, uuid) => {
             count: likeAndComment.comments.length
           } : null,
           likes: likeAndComment.likes.length,
-          liked: likeAndComment.liked 
+          liked: likeAndComment.liked
         }
       })))[0]
   } catch (e) {
     console.log(e)
     return null
   }
-}; 
+};

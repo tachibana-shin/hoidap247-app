@@ -5,7 +5,8 @@ router.use("/api", [
   require("./auth"),
   require("./posts"),
   require("./utilities"),
-  require("./comments")
+  require("./comments"),
+  require("./answers-comment")
 ])
 
 module.exports = router;

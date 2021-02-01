@@ -40,7 +40,7 @@
       </div>
     </template>
     <v-overlay :value="loading">
-      <v-progress-circular indeterminate size="32" color="blue" />
+      <v-progress-circular indeterminate color="blue" />
     </v-overlay>
   </v-card>
 </template>
@@ -114,36 +114,31 @@
         if (!this.comments.find(item => item.id == comment.id)) {
           this.comments.unshift(comment)
         }
-        this.sendingComment = false
       },
       comment__DONE({ id, message, isError }) {
-        if (isError) {
-          this.$store.commit("snackbar/setMessage", {
-            color: "error",
-            text: message
-          })
-        } else {
-          this.$store.commit("snackbar/setMessage", {
-            color: "success",
-            text: message
-          })
-          this.resetCommentBox()
+        if (id == this.data.id) {
+          this.sendingComment = false
+          if (isError) {
+            this.$store.commit("snackbar/setMessage", {
+              color: "error",
+              text: message
+            })
+          } else {
+            /* this.$store.commit("snackbar/setMessage", {
+              color: "success",
+              text: message
+            }) */
+            this.resetCommentBox()
+          }
         }
       }
     },
     methods: {
       updateData,
-      fileToBuffer(file) {
-        return {
-          originalname: file.name,
-          buffer: file
-        }
-      },
-      async sendComment() {
+      sendComment($) {
         this.sendingComment = true
         this.$socket.client.emit("comment", {
-          contents: this.input.contents,
-          photo: this.input.photos[0] && this.fileToBuffer(this.input.photos[0]),
+          ...$,
           uuidPoster: this.data.id
         })
       },
@@ -151,7 +146,7 @@
         const lastCommentId = this.comments[this.comments.length - 1]
         const { data } = await this.$http("/comments/get", {
           params: {
-            id: this.data.id,
+            idPoster: this.data.id,
             lastCommentId: lastCommentId && lastCommentId.id
           }
         })
@@ -170,30 +165,5 @@
   }
 </script>
 <style lang="scss">
-  .comment-showing {
-    &-move {
-      transition: transform .3s ease;
-    }
-
-    &-enter-active {
-      animation: slideYFadeIn .3s ease;
-    }
-
-    &-leave-active {
-      animation: slideYFadeIn .3s ease reverse;
-      position: absolute;
-    }
-
-    @keyframes slideYFadeIn {
-      from {
-        transform: translateY(-30px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-  }
+  @include animate-comment($name: "comment-showing");
 </style>

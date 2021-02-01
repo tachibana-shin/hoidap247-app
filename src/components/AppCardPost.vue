@@ -85,7 +85,7 @@
               </v-btn>
             </v-flex>
             <v-flex>
-              <v-btn icon :ripple="false" :to="noRouterInComment ? undefined : `/view-post/${data.id}`" @click="$emit('click:comment')">
+              <v-btn icon :ripple="false" :to="noRouterInComment ? undefined : `/watch-post/${data.id}`" @click="$emit('click:comment')">
                 <v-icon size="1.3rem"> mdi-comment-outline </v-icon>
                 <span class="text-normal"> {{ $t("labels.COMMENT") }} </span>
               </v-btn>

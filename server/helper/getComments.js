@@ -1,13 +1,10 @@
 const mysql = require("@server/database")
 const getLikerAndCommerInComment = require("./getLikerAndCommerInComment")
-
-async function getBaseUser(uuid) {
-  return (await mysql.query(`select name from users where uuid = ? limit 1`, [uuid]))[0][0]
-}
+const getBaseUser = require("./getBaseUser")
 
 module.exports = async ({
   page = 1,
-  id,
+  idPoster,
   lastCommentId
 }, uuid) => {
   try {
@@ -23,18 +20,20 @@ module.exports = async ({
           users.name,
           users.avatar
         from comments, users
-        where users.uuid = comments.uuid  ${lastCommentId ? `and comments.id < ?` : ""}
-        order by comments.lastModifier desc
-        ${lastCommentId ? "" : "limit 20 offset ?"}`, [
-          lastCommentId || (page - 1) * 20
+        where users.uuid = comments.uuid  ${lastCommentId ? "and comments.id < ?" : ""} and comments.uuidPoster = ?
+        order by comments.lastModifier desc limit 20 
+        ${lastCommentId ? "" : "offset ?"}`, [
+          ...lastCommentId ? [] : [idPoster],
+          lastCommentId || (page - 1) * 20,
+          ...lastCommentId ? [idPoster] : []
         ]))[0]
       .map(async post => {
         const likeAndComment = await getLikerAndCommerInComment(post.id, uuid)
 
         return {
           ...post,
-          answer: likeAndComment.length ? {
-            name: (await getBaseUser(likeAndComment[0]))?.name,
+          answer: likeAndComment.comments.length ? {
+            ...await getBaseUser(likeAndComment.comments[0]),
             count: likeAndComment.comments.length
           } : null,
           likes: likeAndComment.likes.length,

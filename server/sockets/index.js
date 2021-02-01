@@ -23,5 +23,6 @@ module.exports = server => {
     require("./modules/newPoster")(socket, io)
     require("./modules/comment")(socket, io)
     require("./modules/like-comment")(socket, io)
+    require("./modules/answer-comment")(socket, io)
   })
 };

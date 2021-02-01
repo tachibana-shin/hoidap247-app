@@ -17,3 +17,41 @@ $mapDirection: ("l": "left",
     };
   }
 }
+@mixin animate-comment($name: "comment", $type: "slideTopFadeIn") {
+  .#{$name} {
+    &-move {
+      transition: transform .5s ease;
+    }
+
+    &-enter-active {
+      animation: #{$type} .5s ease;
+    }
+
+    &-leave-active {
+      animation: #{$type} .5s ease reverse;
+      position: absolute;
+    }
+
+    @keyframes slideTopFadeIn {
+      from {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    @keyframes slideRightFadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  }
+}

@@ -1,7 +1,6 @@
 const setLike = require("@helper/setLike")
 const getLikerAndCommer = require("@helper/getLikerAndCommer")
 const existsPoster = require("@helper/existsPoster")
-const isLike = require("@helper/isLike")
 
 module.exports = (socket, io) => {
   const req = socket.request
@@ -45,4 +44,4 @@ module.exports = (socket, io) => {
       })
     }
   })
-}; 
+}

@@ -26,7 +26,7 @@ const createRules = i18n => ({
     return i18n.$t("PHONE_NUMBER_ALL_NUMBER")
   },
   contents(value) {
-    if ( value ) {
+    if (value) {
       return true
     } else {
       return i18n.$t("CONTENTS_NOT_EMPTY")
@@ -34,7 +34,7 @@ const createRules = i18n => ({
   },
   class(value) {
     value -= 0
-    if ( value > 0 && value < 13 ) {
+    if (value > 0 && value < 13) {
       return true
     } else {
       return i18n.$t("CLASS_MAXIMUM_IN_RANGE_1_TO_12")
@@ -42,7 +42,7 @@ const createRules = i18n => ({
   },
   point(value) {
     value /= 10
-    if ( value > 0 && value < 11 && ~~value == value ) {
+    if (value > 0 && value < 11 && ~~value == value) {
       return true
     } else {
       return i18n.$t("POINT_INTERGER_AND_RANGE_10_TO_100")
@@ -55,11 +55,11 @@ const createRules = i18n => ({
 
 module.exports = (i18n, object) => {
   const rules = createRules(i18n)
-
-  for ( const key in object ) {
-    if ( key in rules ) {
-      const mess = rules[ key ](object[ key ])
-      if ( mess !== true ) {
+  /* eslint-disable */
+  for (const key in object) {
+    if (key in rules) {
+      const mess = rules[key](object[key])
+      if (mess !== true) {
         return mess
       }
     }

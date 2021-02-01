@@ -20,7 +20,41 @@
         <span class="mx-2"> {{ $timeagojs(data.lastModifier, $i18n.locale) }} </span>
         <span class="mx-2 font-weight-medium" :class="{ 'blue--text': data.liked }" @click="toggleLike"> Thích </span>
         <span class="mx-2 font-weight-medium" @click="stateOpenCommer = true"> Bình luận </span>
-        <span class="mx-2 font-weight-medium"> Xem thêm </span>
+        <v-menu
+            bottom
+            right
+          >
+            <template v-slot:activator="{ on, attrs }">
+             <span class="mx-2 font-weight-medium" v-bind="attrs" v-on="on"> Xem thêm </span>
+            </template>
+
+            <v-list>
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon> mdi-information-outline </v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>
+                  Báo cáo
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon> mdi-pen </v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>
+                  Chỉnh sửa
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon> mdi-delete </v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>
+                  Xóa
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
       </div>
       <div class="mt-2" v-if="!isChildren">
         <div class="d-flex align-center text-body-2" @click="stateOpenCommer = true" v-if="!stateOpenCommer && data.answer">
@@ -31,8 +65,19 @@
           <span class="text--secondary ml-1"> {{ data.answer.count }} phản hồi </span>
         </div>
         <div v-if="stateOpenCommer">
-          <app-comment is-children v-for="(item, index) in answers" :key="index" :data="item" v-if="false" />
-          <app-comment-action :contents.sync="input.contents" :photos.sync="input.photos" small @click:submit="sendAnswerComment" />
+          <template v-if="moreAnswers">
+            <p class="mb-0 text-body-2 font-weight-bold" @click="fetchAnswers" v-show="!loadingAnswers"> Xem thêm các bình luận... </p>
+            <div class="text-center" v-show="loadingAnswers">
+              <v-progress-circular indeterminate color="blue" slot="spinner" />
+            </div>
+          </template>
+          <transition-group name="comment">
+            <app-comment is-children v-for="item in answers" :key="item.id" :data="item" @update="updateData(item, $event[0], $event[1])" />
+            <div class="text-center" v-show="sendingComment" key="loading">
+              <v-progress-circular indeterminate color="blue" slot="spinner" />
+            </div>
+            <app-comment-action :contents.sync="input.contents" :photos.sync="input.photos" small @click:submit="sendAnswerComment" v-if="firstLoaded" key="action" />
+          </transition-group>
         </div>
       </div>
     </div>
@@ -42,7 +87,7 @@
   import AppAvatar from "@/components/AppAvatar"
   import AppCommentAction from "@/components/AppCommentAction"
   import { VueLightbox } from "vue-lightbox2"
-  import { getLinkerInContents } from "@/helper"
+  import { getLinkerInContents, updateData } from "@/helper"
 
   export default {
     name: "app-comment",
@@ -58,7 +103,12 @@
     data: () => ({
       linker: null,
       stateOpenCommer: false,
-      answers: null,
+      answers: [],
+
+      sendingComment: false,
+      loadingAnswers: false,
+      moreAnswers: true,
+      firstLoaded: false,
 
       input: {
         contents: "",
@@ -67,7 +117,7 @@
     }),
     computed: {
       likes() {
-        return this.data.likes + ( this.data.liked ? 1 : 0 )
+        return this.data.likes + (this.data.liked ? 1 : 0)
       }
     },
     watch: {
@@ -80,24 +130,52 @@
       stateOpenCommer: {
         handler(newVal) {
           if (newVal) {
-            // ajax called get comments
-            this.answers = [
-              this.data,
-              this.data
-            ]
+            this.fetchAnswers()
           }
         },
         immediate: true
       }
     },
     sockets: {
-      "like-comment__DONE"({ isError, value, id }) {
+      "like-comment__DONE"({
+        isError,
+        value,
+        id
+      }) {
         if (isError && id == this.data.id) {
           this.$emit("update", ["liked", !value])
+        }
+      },
+      "answer-comment__DONE"({
+        isError,
+        message,
+        id
+      }) {
+        if (id == this.data.id) {
+          this.sendingComment = false
+          if (isError) {
+            this.$store.commit("snackbar/setMessage", {
+              color: "error",
+              text: message
+            })
+          } else {
+            this.resetBox()
+          }
+        }
+      },
+      "SERVER__newAnswer-comment"(answer) {
+        if (this.answers.every(item => item.id != answer.id)) {
+          // !Waring
+          this.answers.push(answer)
         }
       }
     },
     methods: {
+      updateData,
+      resetBox() {
+        this.input.contents = ""
+        this.input.photos = []
+      },
       toggleLike() {
         if (this.$auth.check()) {
           this.$socket.client.emit("like-comment", {
@@ -112,8 +190,38 @@
           })
         }
       },
-      sendAnswerComment() {
+      sendAnswerComment($) {
+        this.sendingComment = true
+        this.$socket.client.emit("answer-comment", {
+          ...$,
+          uuidComment: this.data.id
+        })
+      },
+      async fetchAnswers() {
+        // not use page! get by last id answers
+        /*
+          select * from commentsInComment where id < ? order by lastModifier desc limit 20
+        */
 
+        this.loadingAnswers = true
+
+        const {
+          data: {
+            answers,
+            existsMore
+          }
+        } = await this.$http.get("/answers-comment/get", {
+          params: {
+            firstId: this.answers[0] && this.answers[0].id,
+            idComment: this.data.id
+          }
+        })
+
+        this.loadingAnswers = false
+        this.firstLoaded = true
+        this.moreAnswers = existsMore
+
+        this.answers.unshift(...answers)
       }
     }
   }
@@ -171,4 +279,7 @@
       }
     }
   }
+</style>
+<style lang="scss">
+  @include animate-comment($name: "comment", $type: "slideRightFadeIn");
 </style>

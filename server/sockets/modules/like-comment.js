@@ -1,4 +1,3 @@
-const mysql = require("@server/database")
 const existsComment = require("@helper/existsComment")
 const setLikeComment = require("@helper/setLikeComment")
 const getLikesAndComments = require("@helper/getLikerAndCommerInComment")

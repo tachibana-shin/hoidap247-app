@@ -1,10 +1,10 @@
 <template>
-  <div class="pa-3">
+  <div class="pa-3" v-if="$auth.check()">
     <v-layout>
       <app-avatar :name="$auth.user().name" :avatar="$auth.user().avatar" :size="small ? '30px' : '40px'" class="mr-2" />
       <app-editable class="mr-2 textarea" :contents="contents" @input="$emit('update:contents', $event)" :photos="photos" placeholder="Viết bình luận" @click:add-photos="$refs.inputFile.click()" @click:remove-photos="$emit('update:photos', [])" width-lightbox="100px" height-lightbox="152.43902px" small />
       <!-- @s1guza -->
-      <v-btn color="blue" :dark="validate" shaped :disabled="!validate" @click="$emit('click:submit')"> Đăng </v-btn>
+      <v-btn color="blue" :dark="validate" shaped :disabled="!validate" @click="$emit('click:submit', formData)"> Đăng </v-btn>
     </v-layout>
     <div class="mt-2">
       <v-btn icon @click="$refs.inputFile.click()">
@@ -12,6 +12,9 @@
       </v-btn>
       <input type="file" ref="inputFile" @change="$emit('update:photos', photos.concat(...$event.target.files))" accept="image/*" hidden />
     </div>
+  </div>
+  <div v-else>
+    required login
   </div>
 </template>
 <script>
@@ -28,9 +31,23 @@
       photos: Array,
       small: Boolean
     },
+    methods: {
+      fileToBuffer(file) {
+        return {
+          originalname: file.name,
+          buffer: file
+        }
+      }
+    },
     computed: {
       validate() {
         return !!this.contents || this.photos.length > 0
+      },
+      formData() {
+        return {
+          contents: this.contents,
+          photo: this.photos[0] && this.fileToBuffer(this.photos[0])
+        }
       }
     }
   }
